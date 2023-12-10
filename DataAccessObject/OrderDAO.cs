@@ -144,7 +144,7 @@ namespace DataAccessObject
             }
         }
 
-        public OrderDetail? GetById(int id)
+        public OrderDetail? GetOrderDetailById(int id)
         {
             try
             {
