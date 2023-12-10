@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface IBookInStoreRepository
+    public interface IBookInStoreService
     {
         void Add(BookInStore bookInStore);
         void Update(BookInStore bookInStore);

@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<Store> GetAll()
+        public IList<Store> GetAll()
         {
             try
             {
-                return _context.Set<Store>();
+                return _context.Set<Store>().ToList();
             }
             catch (Exception ex)
             {

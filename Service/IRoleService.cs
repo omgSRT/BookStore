@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface IRoleRepository
+    public interface IRoleService
     {
         void Add(Role role);
         void Update(Role role);

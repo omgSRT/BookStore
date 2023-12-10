@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<BookInStore> GetAll()
+        public IList<BookInStore> GetAll()
         {
             try
             {
-                return _context.Set<BookInStore>();
+                return _context.Set<BookInStore>().ToList();
             }
             catch (Exception ex)
             {
@@ -92,6 +92,21 @@ namespace DataAccessObject
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+        public IList<BookInStore> GetAllWithIncludeBookAndStore()
+        {
+            try
+            {
+                return _context.Set<BookInStore>()
+                    .Include("Book")
+                    .Include("Store")
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<BookInStore>();
             }
         }
     }

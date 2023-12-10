@@ -1,44 +1,44 @@
 ﻿using BusinessObject;
-using DataAccessObject;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public class StoreRepository : IStoreRepository
+    public class StoreService : IStoreService
     {
-        private StoreDAO _dao;
-        public StoreRepository(StoreDAO dao)
+        private IStoreRepository _repository;
+        public StoreService(IStoreRepository repository)
         {
-            _dao = dao;
+            _repository = repository;
         }
 
         public void Add(Store store)
         {
-            _dao.Add(store);
+            _repository.Add(store);
         }
 
         public void Delete(Store store)
         {
-            _dao.Delete(store);
+            _repository.Delete(store);
         }
 
         public IList<Store> GetAll()
         {
-            return _dao.GetAll();
+            return _repository.GetAll();
         }
 
         public Store? GetById(int id)
         {
-            return _dao.GetById(id);
+            return _repository.GetById(id);
         }
 
         public void Update(Store store)
         {
-            _dao.Update(store);
+            _repository.Update(store);
         }
     }
 }

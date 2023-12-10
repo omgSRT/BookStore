@@ -1,44 +1,44 @@
 ﻿using BusinessObject;
-using DataAccessObject;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public class RoleRepository : IRoleRepository
+    public class RoleService : IRoleService
     {
-        private RoleDAO _dao;
-        public RoleRepository(RoleDAO dao)
+        private IRoleRepository _repository;
+        public RoleService(IRoleRepository repository)
         {
-            _dao = dao;
+            _repository = repository;
         }
 
         public void Add(Role role)
         {
-            _dao.Add(role);
+            _repository.Add(role);
         }
 
         public void Delete(Role role)
         {
-            _dao.Delete(role);
+            _repository.Delete(role);
         }
 
         public IList<Role> GetAll()
         {
-            return _dao.GetAll();
+            return _repository.GetAll();
         }
 
         public Role? GetById(int id)
         {
-            return _dao.GetById(id);
+            return _repository.GetById(id);
         }
 
         public void Update(Role role)
         {
-            _dao.Update(role);
+            _repository.Update(role);
         }
     }
 }

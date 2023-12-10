@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface IStoreRepository
+    public interface IStoreService
     {
         void Add(Store store);
         void Update(Store store);

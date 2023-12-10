@@ -1,44 +1,44 @@
 ﻿using BusinessObject;
-using DataAccessObject;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryService : ICategoryService
     {
-        private CategoryDAO _dao;
-        public CategoryRepository(CategoryDAO dao)
+        private ICategoryRepository _repository;
+        public CategoryService(ICategoryRepository repository)
         {
-            _dao = dao;
+            _repository = repository;
         }
 
         public void Add(Category category)
         {
-            _dao.Add(category);
+            _repository.Add(category);
         }
 
         public void Delete(Category category)
         {
-            _dao.Delete(category);
+            _repository.Delete(category);
         }
 
         public IList<Category> GetAll()
         {
-            return _dao.GetAll();
+            return _repository.GetAll();
         }
 
         public Category? GetById(int id)
         {
-            return _dao.GetById(id);
+            return _repository.GetById(id);
         }
 
         public void Update(Category category)
         {
-            _dao.Update(category);
+            _repository.Update(category);
         }
     }
 }

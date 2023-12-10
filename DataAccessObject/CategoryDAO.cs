@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<Category> GetAll()
+        public IList<Category> GetAll()
         {
             try
             {
-                return _context.Set<Category>();
+                return _context.Set<Category>().ToList();
             }
             catch (Exception ex)
             {

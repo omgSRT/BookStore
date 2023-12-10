@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface IOrderRepository
+    public interface IOrderService
     {
         void AddOrder(Order order);
         void DeleteOrder(Order order);

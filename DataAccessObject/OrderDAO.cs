@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<Order> GetAllOrders()
+        public IList<Order> GetAllOrders()
         {
             try
             {
-                return _context.Set<Order>();
+                return _context.Set<Order>().ToList();
             }
             catch (Exception ex)
             {
@@ -131,11 +131,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<OrderDetail> GetAllOrderDetails()
+        public IList<OrderDetail> GetAllOrderDetails()
         {
             try
             {
-                return _context.Set<OrderDetail>();
+                return _context.Set<OrderDetail>().ToList();
             }
             catch (Exception ex)
             {
@@ -172,6 +172,36 @@ namespace DataAccessObject
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+        public IList<Order> GetAllOrdersWithIncludeCustomerAndStaff()
+        {
+            try
+            {
+                return _context.Set<Order>()
+                    .Include("Customer")
+                    .Include("Staff")
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<Order>();
+            }
+        }
+        public IList<OrderDetail> GetAllOrderDetailsWithBookAndBiS()
+        {
+            try
+            {
+                return _context.Set<OrderDetail>()
+                    .Include("Book")
+                    .Include("BookInStore")
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<OrderDetail>();
             }
         }
     }

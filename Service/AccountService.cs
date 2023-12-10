@@ -1,53 +1,53 @@
 ﻿using BusinessObject;
-using DataAccessObject;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountService : IAccountService
     {
-        private AccountDAO _dao;
-        public AccountRepository(AccountDAO dao)
+        private IAccountRepository _repository;
+        public AccountService(IAccountRepository repository)
         {
-            _dao = dao;
+            _repository = repository;
         }
 
         public void Add(Account account)
         {
-            _dao.Add(account);
+            _repository.Add(account);
         }
 
         public void Delete(Account account)
         {
-            _dao.Delete(account);
+            _repository.Delete(account);
         }
 
         public IList<Account> GetAll()
         {
-            return _dao.GetAll();
+            return _repository.GetAll();
         }
 
         public Account? GetById(int id)
         {
-            return _dao.GetById(id);
+            return _repository.GetById(id);
         }
 
         public Account? GetByUsernameAndPassword(string username, string password)
         {
-            return _dao.GetByUsernameAndPassword(username, password);
+            return _repository.GetByUsernameAndPassword(username, password);
         }
 
         public void Update(Account account)
         {
-            _dao.Update(account);
+            _repository.Update(account);
         }
         public IList<Account> GetAllWithIncludeRoleAndStore()
         {
-            return _dao.GetAllWithIncludeRoleAndStore();
+            return _repository.GetAllWithIncludeRoleAndStore();
         }
     }
 }

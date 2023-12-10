@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<Role> GetAll()
+        public IList<Role> GetAll()
         {
             try
             {
-                return _context.Set<Role>();
+                return _context.Set<Role>().ToList();
             }
             catch (Exception ex)
             {

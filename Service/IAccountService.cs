@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface IAccountRepository
+    public interface IAccountService
     {
         void Add(Account account);
         void Update(Account account);

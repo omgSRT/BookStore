@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<Account> GetAll()
+        public IList<Account> GetAll()
         {
             try
             {
-                return _context.Set<Account>();
+                return _context.Set<Account>().ToList();
             }
             catch (Exception ex)
             {
@@ -114,6 +114,21 @@ namespace DataAccessObject
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return null;
+            }
+        }
+        public IList<Account> GetAllWithIncludeRoleAndStore()
+        {
+            try
+            {
+                return _context.Set<Account>()
+                    .Include("Role")
+                    .Include("Store")
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<Account>();
             }
         }
     }

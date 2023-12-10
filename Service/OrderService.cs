@@ -1,77 +1,77 @@
 ﻿using BusinessObject;
-using DataAccessObject;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderService : IOrderService
     {
-        private OrderDAO _dao;
-        public OrderRepository(OrderDAO dao)
+        private IOrderRepository _repository;
+        public OrderService(IOrderRepository repository)
         {
-            _dao = dao;
+            _repository = repository;
         }
 
         public void AddOrder(Order order)
         {
-            _dao.AddOrder(order);
+            _repository.AddOrder(order);
         }
 
         public void AddOrderDetail(OrderDetail orderDetail)
         {
-            _dao.AddOrderDetail(orderDetail);
+            _repository.AddOrderDetail(orderDetail);
         }
 
         public void DeleteOrder(Order order)
         {
-            _dao.DeleteOrder(order);
+            _repository.DeleteOrder(order);
         }
 
         public void DeleteOrderDetail(OrderDetail orderDetail)
         {
-            _dao.DeleteOrderDetail(orderDetail);
+            _repository.DeleteOrderDetail(orderDetail);
         }
 
         public IList<OrderDetail> GetAllOrderDetails()
         {
-            return _dao.GetAllOrderDetails();
+            return _repository.GetAllOrderDetails();
         }
 
         public IList<Order> GetAllOrders()
         {
-            return _dao.GetAllOrders();
+            return _repository.GetAllOrders();
         }
 
         public Order? GetOrderById(int id)
         {
-            return _dao.GetOrderById(id);
+            return _repository.GetOrderById(id);
         }
 
         public OrderDetail? GetOrderDetailById(int id)
         {
-            return _dao.GetOrderDetailById(id);
+            return _repository.GetOrderDetailById(id);
         }
 
         public void UpdateOrder(Order order)
         {
-            _dao.UpdateOrder(order);
+            _repository.UpdateOrder(order);
         }
 
         public void UpdateOrderDetail(OrderDetail orderDetail)
         {
-            _dao.UpdateOrderDetail(orderDetail);
+            _repository.UpdateOrderDetail(orderDetail);
         }
         public IList<Order> GetAllOrdersWithIncludeCustomerAndStaff()
         {
-            return _dao.GetAllOrdersWithIncludeCustomerAndStaff();
+            return _repository.GetAllOrdersWithIncludeCustomerAndStaff();
         }
         public IList<OrderDetail> GetAllOrderDetailsWithBookAndBiS()
         {
-            return _dao.GetAllOrderDetailsWithBookAndBiS();
+            return _repository.GetAllOrderDetailsWithBookAndBiS();
         }
     }
 }

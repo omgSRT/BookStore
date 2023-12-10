@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface IPublisherRepository
+    public interface IPublisherService
     {
         void Add(Publisher publisher);
         void Update(Publisher publisher);

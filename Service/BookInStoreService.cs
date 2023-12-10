@@ -1,48 +1,48 @@
 ﻿using BusinessObject;
-using DataAccessObject;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public class BookInStoreRepository : IBookInStoreRepository
+    public class BookInStoreService : IBookInStoreService
     {
-        private BookInStoreDAO _dao;
-        public BookInStoreRepository(BookInStoreDAO dao)
+        private IBookInStoreRepository _repository;
+        public BookInStoreService(IBookInStoreRepository repository)
         {
-            _dao = dao;
+            _repository = repository;
         }
 
         public void Add(BookInStore bookInStore)
         {
-            _dao.Add(bookInStore);
+            _repository.Add(bookInStore);
         }
 
         public void Delete(BookInStore bookInStore)
         {
-            _dao.Delete(bookInStore);
+            _repository.Delete(bookInStore);
         }
 
         public IList<BookInStore> GetAll()
         {
-            return _dao.GetAll();
+            return _repository.GetAll();
         }
 
         public BookInStore? GetById(int id)
         {
-            return _dao.GetById(id);
+            return _repository.GetById(id);
         }
 
         public void Update(BookInStore bookInStore)
         {
-            _dao.Update(bookInStore);
+            _repository.Update(bookInStore);
         }
         public IList<BookInStore> GetAllWithIncludeBookAndStore()
         {
-            return _dao.GetAllWithIncludeBookAndStore();
+            return _repository.GetAllWithIncludeBookAndStore();
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Service
 {
-    public interface ICategoryRepository
+    public interface ICategoryService
     {
         void Add(Category category);
         void Update(Category category);

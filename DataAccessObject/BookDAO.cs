@@ -51,11 +51,11 @@ namespace DataAccessObject
             }
         }
 
-        public IEnumerable<Book> GetAll()
+        public IList<Book> GetAll()
         {
             try
             {
-                return _context.Set<Book>();
+                return _context.Set<Book>().ToList();
             }
             catch (Exception ex)
             {
@@ -92,6 +92,21 @@ namespace DataAccessObject
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+        public IList<Book> GetAllWithIncludeCategoryAndPublisher()
+        {
+            try
+            {
+                return _context.Set<Book>()
+                    .Include("Category")
+                    .Include("Publisher")
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<Book>();
             }
         }
     }
