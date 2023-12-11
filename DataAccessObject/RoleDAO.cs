@@ -11,9 +11,9 @@ namespace DataAccessObject
     public class RoleDAO
     {
         private BookStoreDBContext _context;
-        public RoleDAO(BookStoreDBContext context)
+        public RoleDAO()
         {
-            _context = context;
+            _context = new BookStoreDBContext();
         }
         public void Add(Role role)
         {

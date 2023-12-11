@@ -11,9 +11,9 @@ namespace DataAccessObject
     public class OrderDAO
     {
         private BookStoreDBContext _context;
-        public OrderDAO(BookStoreDBContext context)
+        public OrderDAO()
         {
-            _context = context;
+            _context = new BookStoreDBContext();
         }
         public void AddOrder(Order order)
         {

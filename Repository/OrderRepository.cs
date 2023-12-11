@@ -11,9 +11,9 @@ namespace Repository
     public class OrderRepository : IOrderRepository
     {
         private OrderDAO _dao;
-        public OrderRepository(OrderDAO dao)
+        public OrderRepository()
         {
-            _dao = dao;
+            _dao = new OrderDAO();
         }
 
         public void AddOrder(Order order)

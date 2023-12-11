@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    internal class PublisherRepository : IPublisherRepository
+    public class PublisherRepository : IPublisherRepository
     {
         private PublisherDAO _dao;
-        public PublisherRepository(PublisherDAO dao)
+        public PublisherRepository()
         {
-            _dao = dao;
+            _dao = new PublisherDAO();
         }
 
         public void Add(Publisher publisher)

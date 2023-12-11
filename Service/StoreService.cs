@@ -11,9 +11,9 @@ namespace Service
     public class StoreService : IStoreService
     {
         private IStoreRepository _repository;
-        public StoreService(IStoreRepository repository)
+        public StoreService()
         {
-            _repository = repository;
+            _repository = new StoreRepository();
         }
 
         public void Add(Store store)

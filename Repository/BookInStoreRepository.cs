@@ -11,9 +11,9 @@ namespace Repository
     public class BookInStoreRepository : IBookInStoreRepository
     {
         private BookInStoreDAO _dao;
-        public BookInStoreRepository(BookInStoreDAO dao)
+        public BookInStoreRepository()
         {
-            _dao = dao;
+            _dao = new BookInStoreDAO();
         }
 
         public void Add(BookInStore bookInStore)

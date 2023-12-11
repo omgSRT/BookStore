@@ -11,9 +11,9 @@ namespace Repository
     public class RoleRepository : IRoleRepository
     {
         private RoleDAO _dao;
-        public RoleRepository(RoleDAO dao)
+        public RoleRepository()
         {
-            _dao = dao;
+            _dao = new RoleDAO();
         }
 
         public void Add(Role role)

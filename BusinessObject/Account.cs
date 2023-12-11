@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject
 {
@@ -12,13 +13,20 @@ namespace BusinessObject
         }
 
         public int Id { get; set; }
+        [Required]
         public string? Username { get; set; }
+        [Required]
         public string? Password { get; set; }
         public string? Name { get; set; }
         public string? Avatar { get; set; }
+        [Required]
+        [MinLength(8)]
         public string? Phone { get; set; }
+        [Required]
         public DateTime? DateOfBirth { get; set; }
+        [Required]
         public bool? IsActive { get; set; }
+        [Required]
         public int? RoleId { get; set; }
         public int? StoreId { get; set; }
         public string? Address { get; set; }

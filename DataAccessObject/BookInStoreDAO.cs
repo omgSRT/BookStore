@@ -11,9 +11,9 @@ namespace DataAccessObject
     public class BookInStoreDAO
     {
         private BookStoreDBContext _context;
-        public BookInStoreDAO(BookStoreDBContext context)
+        public BookInStoreDAO()
         {
-            _context = context;
+            _context = new BookStoreDBContext();
         }
         public void Add(BookInStore bookInStore)
         {

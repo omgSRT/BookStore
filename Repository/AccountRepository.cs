@@ -11,9 +11,9 @@ namespace Repository
     public class AccountRepository : IAccountRepository
     {
         private AccountDAO _dao;
-        public AccountRepository(AccountDAO dao)
+        public AccountRepository()
         {
-            _dao = dao;
+            _dao = new AccountDAO();
         }
 
         public void Add(Account account)

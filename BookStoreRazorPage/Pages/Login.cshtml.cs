@@ -16,12 +16,11 @@ namespace BookStoreRazorPage.Pages
         private readonly IRoleService _roleService;
         private readonly IStoreService _storeService;
 
-        public LoginModel(IAccountService accountService, IRoleService roleService,
-            IStoreService storeService)
+        public LoginModel()
         {
-            _accountService = accountService;
-            _roleService = roleService;
-            _storeService = storeService;
+            _accountService = new AccountService();
+            _roleService = new RoleService();
+            _storeService = new StoreService();
         }
 
         public IActionResult OnGet()
@@ -46,12 +45,7 @@ namespace BookStoreRazorPage.Pages
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public IActionResult OnPost()
-        {
-            if (!ModelState.IsValid || Account == null)
-            {
-                return Page();
-            }
-
+        { 
             try
             {
                 var username = Account.Username;
@@ -89,7 +83,7 @@ namespace BookStoreRazorPage.Pages
                             }
                             else if(account.IsActive == true && account.RoleId == 1) {
                                 HttpContext.Session.SetString("account", "customer");
-                                return Page();
+                                return RedirectToPage("./AccountPages/Edit", new { id = account.Id });
                             }
                             else if (account.IsActive == true && account.RoleId == 2)
                             {

@@ -11,9 +11,9 @@ namespace Repository
     public class CategoryRepository : ICategoryRepository
     {
         private CategoryDAO _dao;
-        public CategoryRepository(CategoryDAO dao)
+        public CategoryRepository()
         {
-            _dao = dao;
+            _dao = new CategoryDAO();
         }
 
         public void Add(Category category)

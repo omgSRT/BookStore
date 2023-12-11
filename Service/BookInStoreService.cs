@@ -11,9 +11,9 @@ namespace Service
     public class BookInStoreService : IBookInStoreService
     {
         private IBookInStoreRepository _repository;
-        public BookInStoreService(IBookInStoreRepository repository)
+        public BookInStoreService()
         {
-            _repository = repository;
+            _repository = new BookInStoreRepository();
         }
 
         public void Add(BookInStore bookInStore)

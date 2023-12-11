@@ -11,9 +11,9 @@ namespace DataAccessObject
     public class PublisherDAO
     {
         private BookStoreDBContext _context;
-        public PublisherDAO(BookStoreDBContext context)
+        public PublisherDAO()
         {
-            _context = context;
+            _context = new BookStoreDBContext();
         }
         public void Add(Publisher publisher)
         {

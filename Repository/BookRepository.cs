@@ -11,9 +11,9 @@ namespace Repository
     public class BookRepository : IBookRepository
     {
         private BookDAO _dao;
-        public BookRepository(BookDAO dao)
+        public BookRepository()
         {
-            _dao = dao;
+            _dao = new BookDAO();
         }
 
         public void Add(Book book)

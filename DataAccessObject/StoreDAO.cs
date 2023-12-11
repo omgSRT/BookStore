@@ -11,9 +11,9 @@ namespace DataAccessObject
     public class StoreDAO
     {
         private BookStoreDBContext _context;
-        public StoreDAO(BookStoreDBContext context)
+        public StoreDAO()
         {
-            _context = context;
+            _context = new BookStoreDBContext();
         }
         public void Add(Store store)
         {

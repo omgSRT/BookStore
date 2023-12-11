@@ -11,9 +11,9 @@ namespace Service
     public class OrderService : IOrderService
     {
         private IOrderRepository _repository;
-        public OrderService(IOrderRepository repository)
+        public OrderService()
         {
-            _repository = repository;
+            _repository = new OrderRepository();
         }
 
         public void AddOrder(Order order)

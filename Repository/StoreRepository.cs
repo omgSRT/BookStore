@@ -11,9 +11,9 @@ namespace Repository
     public class StoreRepository : IStoreRepository
     {
         private StoreDAO _dao;
-        public StoreRepository(StoreDAO dao)
+        public StoreRepository()
         {
-            _dao = dao;
+            _dao = new StoreDAO();
         }
 
         public void Add(Store store)
