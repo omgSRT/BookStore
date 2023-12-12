@@ -120,10 +120,11 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Account>()
+                var list = _context.Set<Account>()
                     .Include("Role")
                     .Include("Store")
                     .ToList();
+                return list;
             }
             catch (Exception ex)
             {

@@ -6,28 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.AccountPages
 {
     public class IndexModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IAccountService _accountService;
 
-        public IndexModel(BusinessObject.BookStoreDBContext context)
+        public IndexModel()
         {
-            _context = context;
+            _accountService = new AccountService();
         }
 
         public IList<Account> Account { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public IActionResult OnGet()
         {
-            if (_context.Accounts != null)
+            var loginSession = HttpContext.Session.GetString("account");
+            if(loginSession == null)
             {
-                Account = await _context.Accounts
-                .Include(a => a.Role)
-                .Include(a => a.Store).ToListAsync();
+                TempData["ErrorLogin"] = "You need to login to access this page";
+                return RedirectToPage("../Login");
             }
+            else if (!loginSession.Equals("admin"))
+            {
+                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                return RedirectToPage("../Error");
+            }
+            Account = _accountService.GetAllWithIncludeRoleAndStore();
+            return Page();
         }
     }
 }

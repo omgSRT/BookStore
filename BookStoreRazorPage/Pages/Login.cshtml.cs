@@ -65,7 +65,7 @@ namespace BookStoreRazorPage.Pages
                     if(username.Equals(adminUsername) && password.Equals(adminPassword))
                     {
                         HttpContext.Session.SetString("account", "admin");
-                        return Page();
+                        return RedirectToPage("./AccountPages/Index");
                     }
                     else
                     {
@@ -83,11 +83,13 @@ namespace BookStoreRazorPage.Pages
                             }
                             else if(account.IsActive == true && account.RoleId == 1) {
                                 HttpContext.Session.SetString("account", "customer");
+                                HttpContext.Session.SetInt32("accountId", account.Id);
                                 return RedirectToPage("./AccountPages/Edit", new { id = account.Id });
                             }
                             else if (account.IsActive == true && account.RoleId == 2)
                             {
-                                HttpContext.Session.SetString("account", "staff");
+                                HttpContext.Session.SetString("account", "seller");
+                                HttpContext.Session.SetInt32("accountId", account.Id);
                                 return Page();
                             }
                         }

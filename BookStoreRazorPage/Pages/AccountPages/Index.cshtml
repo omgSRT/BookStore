@@ -23,9 +23,6 @@
                 @Html.DisplayNameFor(model => model.Account[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Account[0].Avatar)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Account[0].Phone)
             </th>
             <th>
@@ -59,9 +56,6 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Avatar)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
@@ -74,10 +68,10 @@
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Role.Id)
+                @Html.DisplayFor(modelItem => item.Role.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Store.Id)
+                @Html.DisplayFor(modelItem => item.Store.Name)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
