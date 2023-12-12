@@ -33,3 +33,9 @@
         <h1 class="text-danger">@TempData["ErrorAuthorize"]</h1>
     </div>
 }
+@if (TempData["Error"] != null)
+{
+    <div class="text-center">
+        <h1 class="text-danger">@TempData["Error"]</h1>
+    </div>
+}
