@@ -49,5 +49,10 @@ namespace Service
         {
             return _repository.GetAllWithIncludeRoleAndStore();
         }
+
+        public List<Account> GetByName(string name)
+        {
+           return _repository.GetByName(name);
+        }
     }
 }

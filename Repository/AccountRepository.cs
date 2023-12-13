@@ -49,5 +49,10 @@ namespace Repository
         {
             return _dao.GetAllWithIncludeRoleAndStore();
         }
+
+        public List<Account> GetByName(string name)
+        {
+            return _dao.GetByName(name);
+        }
     }
 }

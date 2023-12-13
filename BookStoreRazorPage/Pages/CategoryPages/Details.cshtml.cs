@@ -8,20 +8,20 @@ using Microsoft.EntityFrameworkCore;
 using BusinessObject;
 using Service;
 
-namespace BookStoreRazorPage.Pages.AccountPages
+namespace BookStoreRazorPage.Pages.CategoryPages
 {
     public class DetailsModel : PageModel
     {
-        private readonly IAccountService _accountService;
+        private readonly ICategoryService _categoryService;
 
-        public DetailsModel(IAccountService accountService)
+        public DetailsModel(ICategoryService categoryService)
         {
-            _accountService = accountService;
+            _categoryService = categoryService;
         }
 
-      public Account Account { get; set; } = default!; 
+        public Category Category { get; set; } = default!;
 
-        public IActionResult OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             var loginSession = HttpContext.Session.GetString("account");
             if (loginSession == null)
@@ -29,24 +29,24 @@ namespace BookStoreRazorPage.Pages.AccountPages
                 TempData["ErrorLogin"] = "You need to login to access this page";
                 return RedirectToPage("../Login");
             }
-            else if (!loginSession.Equals("admin") && !loginSession.Equals("customer") && !loginSession.Equals("seller"))
+            else if (!loginSession.Equals("admin"))
             {
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
-            if (id == null )
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var account = _accountService.GetById(id.Value);
-            if (account == null)
+            var category = _categoryService.GetById(id.Value);
+            if (category == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
-                Account = account;
+                Category = category;
             }
             return Page();
         }

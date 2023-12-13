@@ -21,7 +21,7 @@ namespace BookStoreRazorPage.Pages.AccountPages
         public IActionResult OnGet()
         {
         ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id");
-        ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Id");
+       
             return Page();
         }
 

@@ -132,5 +132,20 @@ namespace DataAccessObject
                 return new List<Account>();
             }
         }
+        public List<Account> GetByName(string name)
+        {
+            try
+            {
+                return _context.Accounts.Where(p => p.Name.Contains(name)).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+        }
+
+
+
     }
 }

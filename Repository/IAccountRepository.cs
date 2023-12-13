@@ -16,5 +16,6 @@ namespace Repository
         Account? GetById(int id);
         Account? GetByUsernameAndPassword(String username, String password);
         IList<Account> GetAllWithIncludeRoleAndStore();
+        List<Account> GetByName(string name);
     }
 }
