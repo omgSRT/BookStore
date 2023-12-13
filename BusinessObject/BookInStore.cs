@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject
 {
@@ -11,8 +12,12 @@ namespace BusinessObject
         }
 
         public int Id { get; set; }
+        [Required]
         public int? BookId { get; set; }
+        [Required]
         public int? StoreId { get; set; }
+        [Required]
+        [Range(1, int.MaxValue)]
         public int? Amount { get; set; }
 
         public virtual Book? Book { get; set; }

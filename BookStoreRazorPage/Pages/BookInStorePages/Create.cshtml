@@ -1,0 +1,41 @@
+﻿@page
+@using Service;
+@model BookStoreRazorPage.Pages.BookInStorePages.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+    IAccountService accountService = new AccountService();
+    var id = HttpContext.Session.GetInt32("accountId");
+    var account = id != null ? accountService.GetById((int)id) : null;
+}
+
+<h1>Import Book</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="BookInStore.StoreId" type="hidden" value="@account.StoreId" />
+            <div class="form-group">
+                <label asp-for="BookInStore.BookId" class="control-label"></label>
+                <select asp-for="BookInStore.BookId" class ="form-control" asp-items="ViewBag.BookId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookInStore.Amount" class="control-label"></label>
+                <input asp-for="BookInStore.Amount" class="form-control" type="number" required min="1"/>
+                <span asp-validation-for="BookInStore.Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

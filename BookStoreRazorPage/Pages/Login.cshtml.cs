@@ -90,7 +90,7 @@ namespace BookStoreRazorPage.Pages
                             {
                                 HttpContext.Session.SetString("account", "seller");
                                 HttpContext.Session.SetInt32("accountId", account.Id);
-                                return Page();
+                                return RedirectToPage("./BookInStorePages/Index");
                             }
                         }
                     }
