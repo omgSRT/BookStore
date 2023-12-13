@@ -1,0 +1,68 @@
+﻿@page
+@model BookStoreRazorPage.Pages.BookInStorePages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+@if (TempData["ResultFailed"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ResultFailed"]
+    </div>
+    TempData.Clear();
+}
+@if (TempData["ResultSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ResultSuccess"]
+    </div>
+    TempData.Clear();
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookInStore[0].Book)
+            </th>
+            <th>
+                ISBN
+            </th>
+            <th>
+                Author
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookInStore[0].Amount)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.BookInStore) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book.Isbn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

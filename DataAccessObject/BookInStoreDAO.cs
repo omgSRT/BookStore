@@ -99,8 +99,10 @@ namespace DataAccessObject
             try
             {
                 return _context.Set<BookInStore>()
-                    .Include("Book")
-                    .Include("Store")
+                    .Include(bis => bis.Book)
+                    .Include(bis => bis.Book!.Category)
+                    .Include(bis => bis.Book!.Publisher)
+                    .Include(bis => bis.Store)
                     .ToList();
             }
             catch (Exception ex)

@@ -63,7 +63,7 @@ namespace BookStoreRazorPage.Pages
                     Phone = Account.Phone,
                     DateOfBirth = Account.DateOfBirth,
                     IsActive = true,
-                    RoleId = 1,
+                    RoleId = 2,
                     Address = Account.Address,
                 };
 

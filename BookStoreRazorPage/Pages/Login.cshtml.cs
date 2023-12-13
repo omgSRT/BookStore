@@ -81,16 +81,16 @@ namespace BookStoreRazorPage.Pages
                                 TempData["ErrorLogin"] = "Wrong email or password";
                                 return Page();
                             }
-                            else if(account.IsActive == true && account.RoleId == 1) {
+                            else if(account.IsActive == true && account.RoleId == 2) {
                                 HttpContext.Session.SetString("account", "customer");
                                 HttpContext.Session.SetInt32("accountId", account.Id);
                                 return RedirectToPage("./AccountPages/Edit", new { id = account.Id });
                             }
-                            else if (account.IsActive == true && account.RoleId == 2)
+                            else if (account.IsActive == true && account.RoleId == 1)
                             {
                                 HttpContext.Session.SetString("account", "seller");
                                 HttpContext.Session.SetInt32("accountId", account.Id);
-                                return Page();
+                                return RedirectToPage("./BookInStorePages/Index");
                             }
                         }
                     }
