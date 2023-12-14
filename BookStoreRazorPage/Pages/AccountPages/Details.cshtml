@@ -41,7 +41,6 @@
             {
                 <p>No avatar available</p>
             }
-            @* @Html.DisplayFor(model => model.Account.Avatar) *@
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Account.Phone)
@@ -82,6 +81,5 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Account?.Id">Edit</a> |
-    <a asp-page="">Back </a>
+    <a asp-page="./Edit" asp-route-id="@Model.Account?.Id">Edit</a>
 </div>

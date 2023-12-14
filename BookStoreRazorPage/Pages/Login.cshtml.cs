@@ -84,7 +84,7 @@ namespace BookStoreRazorPage.Pages
                             else if(account.IsActive == true && account.RoleId == 2) {
                                 HttpContext.Session.SetString("account", "customer");
                                 HttpContext.Session.SetInt32("accountId", account.Id);
-                                return RedirectToPage("./AccountPages/Edit", new { id = account.Id });
+                                return RedirectToPage("./AccountPages/CustomerIndex");
                             }
                             else if (account.IsActive == true && account.RoleId == 1)
                             {
