@@ -10,22 +10,38 @@ namespace DataAccessObject
 {
     public class CategoryDAO
     {
-        private BookStoreDBContext _context;
-        public CategoryDAO()
+        private static CategoryDAO _instance = null;
+        private static readonly object _instanceLock = new object();
+        public CategoryDAO() { }
+
+        public static CategoryDAO SingletonInstance
         {
-            _context = new BookStoreDBContext();
+            get
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new CategoryDAO();
+                    }
+                    return _instance;
+                }
+            }
         }
         public void Add(Category category)
         {
             try
             {
-                var checkExist = _context.Categories.Find(category.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Categories.Find(category.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(category);
+                    _context.SaveChanges();
                 }
-                _context.Add(category);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -37,13 +53,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Categories.Find(category.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Categories.Find(category.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(category);
+                    _context.SaveChanges();
                 }
-                _context.Remove(category);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -55,7 +74,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Category>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Category>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +90,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Category>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Category>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -81,13 +106,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Categories.Find(category.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Categories.Find(category.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(category);
+                    _context.SaveChanges();
                 }
-                _context.Update(category);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {

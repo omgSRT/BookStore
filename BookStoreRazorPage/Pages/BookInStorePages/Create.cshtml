@@ -11,6 +11,12 @@
 
 <h1>Import Book</h1>
 <hr />
+@if(TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"];
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -18,7 +24,9 @@
             <input asp-for="BookInStore.StoreId" type="hidden" value="@account.StoreId" />
             <div class="form-group">
                 <label asp-for="BookInStore.BookId" class="control-label"></label>
-                <select asp-for="BookInStore.BookId" class ="form-control" asp-items="ViewBag.BookId"></select>
+                <select asp-for="BookInStore.BookId" class ="form-control" asp-items="ViewBag.BookId">
+                    <option value="0">-- Select a book to add --</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="BookInStore.Amount" class="control-label"></label>
