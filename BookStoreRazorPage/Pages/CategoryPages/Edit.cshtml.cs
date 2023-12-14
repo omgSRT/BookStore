@@ -14,10 +14,13 @@ namespace BookStoreRazorPage.Pages.CategoryPages
     public class EditModel : PageModel
     {
         private readonly ICategoryService _categoryService;
-
-        public EditModel(ICategoryService categoryService)
+        private readonly IOrderService _orderService;
+        private readonly IBookService _bookService;
+        public EditModel(ICategoryService categoryService, IOrderService orderService, IBookService bookService)
         {
             _categoryService = categoryService;
+            _orderService = orderService;
+            _bookService = bookService;
         }
 
         [BindProperty]
@@ -69,11 +72,27 @@ namespace BookStoreRazorPage.Pages.CategoryPages
                     TempData["ErrorEditCategory"] = "description is required";
                     return Page();
                 }
-                _categoryService.Update(Category);
-                if(Category.IsActive == false)
+                if (Category.IsActive == false)
                 {
-
+                    var bookList = _bookService.GetAll().Where(x => x.CategoryId == Category.Id);
+                    foreach (var book in bookList)
+                    {
+                        var bookListSell = _orderService.GetAllOrderDetails().Where(x => x.BookId == book.Id);
+                        if (bookListSell.Any())
+                        {
+                            TempData["ErrorEditCategory"] = "Cannot deactivate category. Books of this category are associated with orders.";
+                            return Page();
+                        }
+                    }
+                    foreach (var book in bookList)
+                    {
+                        book.IsActive = false;
+                        _bookService.Update(book);
+                    }
                 }
+                _categoryService.Update(Category);
+
+
             }
             catch (DbUpdateConcurrencyException)
             {
