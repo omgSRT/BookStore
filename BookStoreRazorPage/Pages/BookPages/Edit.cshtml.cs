@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.BookPages
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IBookService _bookService;
 
-        public EditModel(BusinessObject.BookStoreDBContext context)
+        public EditModel()
         {
-            _context = context;
+            _bookService = new BookService();
         }
 
         [BindProperty]
@@ -24,55 +25,66 @@ namespace BookStoreRazorPage.Pages.BookPages
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Books == null)
+            try
             {
-                return NotFound();
-            }
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access";
+                    return RedirectToPage("../Login");
+                }
+                else if (!loginSession.Equals("seller"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var book =  await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
-            {
-                return NotFound();
+                var book = _bookService.GetById((int)id);
+                if (book == null)
+                {
+                    return NotFound();
+                }
+                Book = book;
+                ViewData["BookId"] = new SelectList(_bookService.GetAll(), "Id", "Name");
+                return Page();
             }
-            Book = book;
-           ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-           ViewData["PublisherId"] = new SelectList(_context.Publishers, "Id", "Name");
-            return Page();
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
+            }
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Book).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var updateBook = _bookService.GetById(Book.Id);
+                    updateBook!.Amount = Book.Amount;
+                    _bookService.Update(updateBook!);
+
+                    TempData["ResultSuccess"] = "Update Successfully";
+                    return RedirectToPage("./Index");
+                }
+
+                TempData["ResultFailed"] = "Error Occurred. Cannot Update";
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!BookExists(Book.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool BookExists(int id)
-        {
-          return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

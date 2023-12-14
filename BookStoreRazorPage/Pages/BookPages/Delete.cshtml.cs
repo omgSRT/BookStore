@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.BookPages
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IBookService _bookService;
 
-        public DeleteModel(BusinessObject.BookStoreDBContext context)
+        public DeleteModel()
         {
-            _context = context;
+            _bookService = new BookService();
         }
 
         [BindProperty]
@@ -23,40 +24,67 @@ namespace BookStoreRazorPage.Pages.BookPages
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Books == null)
+            try
             {
-                return NotFound();
-            }
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    return RedirectToPage("../Login");
+                }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
+                var book = _bookService.GetAll()
+                    .Where(x => x.Id == (int)id).FirstOrDefault();
 
-            if (book == null)
-            {
-                return NotFound();
+                if (book == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Book = book;
+                }
+                return Page();
             }
-            else 
+            catch (Exception ex)
             {
-                Book = book;
-            }
-            return Page();
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
+            } 
         }
-
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Books == null)
+            try
             {
-                return NotFound();
-            }
-            var book = await _context.Books.FindAsync(id);
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            if (book != null)
+                var book = _bookService.GetById((int)id);
+
+                if (book != null)
+                {
+                    _bookService.Delete(book);
+
+                    TempData["ResultSuccess"] = "Delete Successfully";
+                    return RedirectToPage("./Index");
+                }
+
+                TempData["ResultFailed"] = "Error Occurred. Cannot Delete";
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
             {
-                Book = book;
-                _context.Books.Remove(Book);
-                await _context.SaveChangesAsync();
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
-
-            return RedirectToPage("./Index");
         }
     }
 }

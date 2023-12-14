@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.StorePages
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IStoreService _storeService;
 
-        public EditModel(BusinessObject.BookStoreDBContext context)
+        public EditModel()
         {
-            _context = context;
+            _storeService = new StoreService();
         }
 
         [BindProperty]
@@ -24,53 +25,65 @@ namespace BookStoreRazorPage.Pages.StorePages
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Stores == null)
+            try
             {
-                return NotFound();
-            }
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access";
+                    return RedirectToPage("../Login");
+                }
+                else if (!loginSession.Equals("seller"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var store =  await _context.Stores.FirstOrDefaultAsync(m => m.Id == id);
-            if (store == null)
-            {
-                return NotFound();
+                var store = _storeService.GetById((int)id);
+                if (store == null)
+                {
+                    return NotFound();
+                }
+                Store = store;
+                ViewData["StoreId"] = new SelectList(_storeService.GetAll(), "Id", "Name");
+                return Page();
             }
-            Store = store;
-            return Page();
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
+            }
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Store).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var updateStore = _storeService.GetById(Store.Id);
+                    _storeService.Update(updateStore!);
+
+                    TempData["ResultSuccess"] = "Update Successfully";
+                    return RedirectToPage("./Index");
+                }
+
+                TempData["ResultFailed"] = "Error Occurred. Cannot Update";
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!StoreExists(Store.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool StoreExists(int id)
-        {
-          return (_context.Stores?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

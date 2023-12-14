@@ -6,37 +6,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.BookPages
 {
     public class DetailsModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IBookService _bookService;
 
-        public DetailsModel(BusinessObject.BookStoreDBContext context)
+        public DetailsModel()
         {
-            _context = context;
+            _bookService = new BookService();
         }
 
       public Book Book { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Books == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
-            {
-                return NotFound();
+                var book = _bookService.GetAll()
+                    .Where(x => x.Id == (int)id).FirstOrDefault();
+                if (book == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Book = book;
+                }
+                return Page();
             }
-            else 
+            catch (Exception ex)
             {
-                Book = book;
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
-            return Page();
         }
     }
 }
