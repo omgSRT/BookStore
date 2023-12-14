@@ -73,6 +73,23 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
             {
                 if (ModelState.IsValid)
                 {
+                    if(BookInStore.Id == 0)
+                    {
+                        var id = HttpContext.Session.GetInt32("accountId");
+                        var account = _accountRepository.GetById((int)id);
+                        List<int?> excludedBookIds = _bookInStoreRepository.GetAll()
+                            .Where(bis => bis.BookId.HasValue)
+                            .Select(bis => bis.BookId)
+                            .ToList();
+                        List<Book> filteredBookList = _bookRepository.GetAll()
+                                .Where(book => !excludedBookIds.Contains(book.Id))
+                                .ToList();
+                        ViewData["BookId"] = new SelectList(filteredBookList, "Id", "Name");
+
+                        TempData["Error"] = "Please select books to add";
+                        return Page();
+                    }
+
                     _bookInStoreRepository.Add(BookInStore);
 
                     TempData["ResultSuccess"] = "Create Successfully";

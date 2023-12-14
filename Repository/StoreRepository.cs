@@ -10,35 +10,29 @@ namespace Repository
 {
     public class StoreRepository : IStoreRepository
     {
-        private StoreDAO _dao;
-        public StoreRepository()
-        {
-            _dao = new StoreDAO();
-        }
-
         public void Add(Store store)
         {
-            _dao.Add(store);
+            StoreDAO.SingletonInstance.Add(store);
         }
 
         public void Delete(Store store)
         {
-            _dao.Delete(store);
+            StoreDAO.SingletonInstance.Delete(store);
         }
 
         public IList<Store> GetAll()
         {
-            return _dao.GetAll();
+            return StoreDAO.SingletonInstance.GetAll();
         }
 
         public Store? GetById(int id)
         {
-            return _dao.GetById(id);
+            return StoreDAO.SingletonInstance.GetById(id);
         }
 
         public void Update(Store store)
         {
-            _dao.Update(store);
+            StoreDAO.SingletonInstance.Update(store);
         }
     }
 }

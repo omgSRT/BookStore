@@ -10,35 +10,29 @@ namespace Repository
 {
     public class RoleRepository : IRoleRepository
     {
-        private RoleDAO _dao;
-        public RoleRepository()
-        {
-            _dao = new RoleDAO();
-        }
-
         public void Add(Role role)
         {
-            _dao.Add(role);
+            RoleDAO.SingletonInstance.Add(role);
         }
 
         public void Delete(Role role)
         {
-            _dao.Delete(role);
+            RoleDAO.SingletonInstance.Delete(role);
         }
 
         public IList<Role> GetAll()
         {
-            return _dao.GetAll();
+            return RoleDAO.SingletonInstance.GetAll();
         }
 
         public Role? GetById(int id)
         {
-            return _dao.GetById(id);
+            return RoleDAO.SingletonInstance.GetById(id);
         }
 
         public void Update(Role role)
         {
-            _dao.Update(role);
+            RoleDAO.SingletonInstance.Update(role);
         }
     }
 }

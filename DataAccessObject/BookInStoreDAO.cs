@@ -10,22 +10,38 @@ namespace DataAccessObject
 {
     public class BookInStoreDAO
     {
-        private BookStoreDBContext _context;
-        public BookInStoreDAO()
+        private static BookInStoreDAO _instance = null;
+        private static readonly object _instanceLock = new object();
+        public BookInStoreDAO() { }
+
+        public static BookInStoreDAO SingletonInstance
         {
-            _context = new BookStoreDBContext();
+            get
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new BookInStoreDAO();
+                    }
+                    return _instance;
+                }
+            }
         }
         public void Add(BookInStore bookInStore)
         {
             try
             {
-                var checkExist = _context.BookInStores.Find(bookInStore.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.BookInStores.Find(bookInStore.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(bookInStore);
+                    _context.SaveChanges();
                 }
-                _context.Add(bookInStore);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -37,13 +53,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.BookInStores.Find(bookInStore.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.BookInStores.Find(bookInStore.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(bookInStore);
+                    _context.SaveChanges();
                 }
-                _context.Remove(bookInStore);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -55,7 +74,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<BookInStore>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<BookInStore>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +90,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<BookInStore>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<BookInStore>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -81,13 +106,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.BookInStores.Find(bookInStore.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.BookInStores.Find(bookInStore.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(bookInStore);
+                    _context.SaveChanges();
                 }
-                _context.Update(bookInStore);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -98,12 +126,15 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<BookInStore>()
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<BookInStore>()
                     .Include(bis => bis.Book)
                     .Include(bis => bis.Book!.Category)
                     .Include(bis => bis.Book!.Publisher)
                     .Include(bis => bis.Store)
                     .ToList();
+                }
             }
             catch (Exception ex)
             {

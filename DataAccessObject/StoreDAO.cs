@@ -10,22 +10,38 @@ namespace DataAccessObject
 {
     public class StoreDAO
     {
-        private BookStoreDBContext _context;
-        public StoreDAO()
+        private static StoreDAO _instance = null;
+        private static readonly object _instanceLock = new object();
+        public StoreDAO() { }
+
+        public static StoreDAO SingletonInstance
         {
-            _context = new BookStoreDBContext();
+            get
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new StoreDAO();
+                    }
+                    return _instance;
+                }
+            }
         }
         public void Add(Store store)
         {
             try
             {
-                var checkExist = _context.Stores.Find(store.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Stores.Find(store.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(store);
+                    _context.SaveChanges();
                 }
-                _context.Add(store);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -37,13 +53,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Stores.Find(store.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Stores.Find(store.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(store);
+                    _context.SaveChanges();
                 }
-                _context.Remove(store);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -55,7 +74,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Store>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Store>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +90,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Store>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Store>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -81,13 +106,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Stores.Find(store.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Stores.Find(store.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(store);
+                    _context.SaveChanges();
                 }
-                _context.Update(store);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {

@@ -10,68 +10,62 @@ namespace Repository
 {
     public class OrderRepository : IOrderRepository
     {
-        private OrderDAO _dao;
-        public OrderRepository()
-        {
-            _dao = new OrderDAO();
-        }
-
         public void AddOrder(Order order)
         {
-            _dao.AddOrder(order);
+            OrderDAO.SingletonInstance.AddOrder(order);
         }
 
         public void AddOrderDetail(OrderDetail orderDetail)
         {
-            _dao.AddOrderDetail(orderDetail);
+            OrderDAO.SingletonInstance.AddOrderDetail(orderDetail);
         }
 
         public void DeleteOrder(Order order)
         {
-            _dao.DeleteOrder(order);
+            OrderDAO.SingletonInstance.DeleteOrder(order);
         }
 
         public void DeleteOrderDetail(OrderDetail orderDetail)
         {
-            _dao.DeleteOrderDetail(orderDetail);
+            OrderDAO.SingletonInstance.DeleteOrderDetail(orderDetail);
         }
 
         public IList<OrderDetail> GetAllOrderDetails()
         {
-            return _dao.GetAllOrderDetails();
+            return OrderDAO.SingletonInstance.GetAllOrderDetails();
         }
 
         public IList<Order> GetAllOrders()
         {
-            return _dao.GetAllOrders();
+            return OrderDAO.SingletonInstance.GetAllOrders();
         }
 
         public Order? GetOrderById(int id)
         {
-            return _dao.GetOrderById(id);
+            return OrderDAO.SingletonInstance.GetOrderById(id);
         }
 
         public OrderDetail? GetOrderDetailById(int id)
         {
-            return _dao.GetOrderDetailById(id);
+            return OrderDAO.SingletonInstance.GetOrderDetailById(id);
         }
 
         public void UpdateOrder(Order order)
         {
-            _dao.UpdateOrder(order);
+            OrderDAO.SingletonInstance.UpdateOrder(order);
         }
 
         public void UpdateOrderDetail(OrderDetail orderDetail)
         {
-            _dao.UpdateOrderDetail(orderDetail);
+            OrderDAO.SingletonInstance.UpdateOrderDetail(orderDetail);
         }
         public IList<Order> GetAllOrdersWithIncludeCustomerAndStaff()
         {
-            return _dao.GetAllOrdersWithIncludeCustomerAndStaff();
+            return OrderDAO.SingletonInstance.GetAllOrdersWithIncludeCustomerAndStaff();
         }
         public IList<OrderDetail> GetAllOrderDetailsWithBookAndBiS()
         {
-            return _dao.GetAllOrderDetailsWithBookAndBiS();
+            return OrderDAO.SingletonInstance.GetAllOrderDetailsWithBookAndBiS();
         }
     }
 }

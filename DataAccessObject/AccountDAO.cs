@@ -10,22 +10,38 @@ namespace DataAccessObject
 {
     public class AccountDAO
     {
-        private BookStoreDBContext _context;
-        public AccountDAO()
+        private static AccountDAO _instance = null;
+        private static readonly object _instanceLock = new object();
+        public AccountDAO() { }
+
+        public static AccountDAO SingletonInstance
         {
-            _context = new BookStoreDBContext();
+            get
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new AccountDAO();
+                    }
+                    return _instance;
+                }
+            }
         }
         public void Add(Account account)
         {
             try
             {
-                var checkExist = _context.Accounts.Find(account.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Accounts.Find(account.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(account);
+                    _context.SaveChanges();
                 }
-                _context.Add(account);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -37,13 +53,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Accounts.Find(account.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Accounts.Find(account.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(account);
+                    _context.SaveChanges();
                 }
-                _context.Remove(account);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -55,7 +74,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Account>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Account>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +90,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Account>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Account>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -81,13 +106,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Accounts.Find(account.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Accounts.Find(account.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(account);
+                    _context.SaveChanges();
                 }
-                _context.Update(account);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -99,16 +127,19 @@ namespace DataAccessObject
         {
             try
             {
-                var existedAccount = _context.Set<Account>().Where(x => x.Username != null && x.Username!.Equals(username)).FirstOrDefault();
-                if (existedAccount != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    if (existedAccount.Password is null || !existedAccount.Password.Equals(password))
+                    var existedAccount = _context.Set<Account>().Where(x => x.Username != null && x.Username!.Equals(username)).FirstOrDefault();
+                    if (existedAccount != null)
                     {
-                        return null;
+                        if (existedAccount.Password is null || !existedAccount.Password.Equals(password))
+                        {
+                            return null;
+                        }
+                        return existedAccount;
                     }
-                    return existedAccount;
+                    return null;
                 }
-                return null;
             }
             catch (Exception ex)
             {
@@ -120,11 +151,14 @@ namespace DataAccessObject
         {
             try
             {
-                var list = _context.Set<Account>()
+                using (var _context = new BookStoreDBContext())
+                {
+                    var list = _context.Set<Account>()
                     .Include("Role")
                     .Include("Store")
                     .ToList();
-                return list;
+                    return list;
+                }
             }
             catch (Exception ex)
             {
@@ -136,7 +170,9 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Accounts.Where(p => p.Name.Contains(name)).ToList();
+                using (var _context = new BookStoreDBContext()) { 
+                    return _context.Accounts.Where(p => p.Name.Contains(name)).ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -144,8 +180,5 @@ namespace DataAccessObject
                 return null;
             }
         }
-
-
-
     }
 }

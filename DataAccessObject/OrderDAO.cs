@@ -10,22 +10,38 @@ namespace DataAccessObject
 {
     public class OrderDAO
     {
-        private BookStoreDBContext _context;
-        public OrderDAO()
+        private static OrderDAO _instance = null;
+        private static readonly object _instanceLock = new object();
+        public OrderDAO() { }
+
+        public static OrderDAO SingletonInstance
         {
-            _context = new BookStoreDBContext();
+            get
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new OrderDAO();
+                    }
+                    return _instance;
+                }
+            }
         }
         public void AddOrder(Order order)
         {
             try
             {
-                var checkExist = _context.Orders.Find(order.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Orders.Find(order.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(order);
+                    _context.SaveChanges();
                 }
-                _context.Add(order);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -37,13 +53,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Orders.Find(order.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Orders.Find(order.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(order);
+                    _context.SaveChanges();
                 }
-                _context.Remove(order);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -55,7 +74,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Order>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Order>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +90,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Order>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Order>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -81,13 +106,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Orders.Find(order.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Orders.Find(order.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(order);
+                    _context.SaveChanges();
                 }
-                _context.Update(order);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -99,13 +127,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.OrderDetails.Find(orderDetail.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.OrderDetails.Find(orderDetail.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(orderDetail);
+                    _context.SaveChanges();
                 }
-                _context.Add(orderDetail);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -117,13 +148,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.OrderDetails.Find(orderDetail.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.OrderDetails.Find(orderDetail.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(orderDetail);
+                    _context.SaveChanges();
                 }
-                _context.Remove(orderDetail);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -135,7 +169,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<OrderDetail>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<OrderDetail>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -148,7 +185,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<OrderDetail>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<OrderDetail>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -161,13 +201,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.OrderDetails.Find(orderDetail.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.OrderDetails.Find(orderDetail.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(orderDetail);
+                    _context.SaveChanges();
                 }
-                _context.Update(orderDetail);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -178,10 +221,13 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Order>()
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Order>()
                     .Include("Customer")
                     .Include("Staff")
                     .ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -193,10 +239,13 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<OrderDetail>()
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<OrderDetail>()
                     .Include("Book")
                     .Include("BookInStore")
                     .ToList();
+                }
             }
             catch (Exception ex)
             {

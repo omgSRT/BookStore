@@ -9,36 +9,30 @@ using System.Threading.Tasks;
 namespace Repository
 {
     public class CategoryRepository : ICategoryRepository
-    {
-        private CategoryDAO _dao;
-        public CategoryRepository()
-        {
-            _dao = new CategoryDAO();
-        }
-
+    { 
         public void Add(Category category)
         {
-            _dao.Add(category);
+            CategoryDAO.SingletonInstance.Add(category);
         }
 
         public void Delete(Category category)
         {
-            _dao.Delete(category);
+            CategoryDAO.SingletonInstance.Delete(category);
         }
 
         public IList<Category> GetAll()
         {
-            return _dao.GetAll();
+            return CategoryDAO.SingletonInstance.GetAll();
         }
 
         public Category? GetById(int id)
         {
-            return _dao.GetById(id);
+            return CategoryDAO.SingletonInstance.GetById(id);
         }
 
         public void Update(Category category)
         {
-            _dao.Update(category);
+            CategoryDAO.SingletonInstance.Update(category);
         }
     }
 }

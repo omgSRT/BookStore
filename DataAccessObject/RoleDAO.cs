@@ -10,22 +10,38 @@ namespace DataAccessObject
 {
     public class RoleDAO
     {
-        private BookStoreDBContext _context;
-        public RoleDAO()
+        private static RoleDAO _instance = null;
+        private static readonly object _instanceLock = new object();
+        public RoleDAO() { }
+
+        public static RoleDAO SingletonInstance
         {
-            _context = new BookStoreDBContext();
+            get
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new RoleDAO();
+                    }
+                    return _instance;
+                }
+            }
         }
         public void Add(Role role)
         {
             try
             {
-                var checkExist = _context.Roles.Find(role.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Roles.Find(role.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Add(role);
+                    _context.SaveChanges();
                 }
-                _context.Add(role);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -37,13 +53,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Roles.Find(role.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Roles.Find(role.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Remove(role);
+                    _context.SaveChanges();
                 }
-                _context.Remove(role);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -55,7 +74,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Role>().ToList();
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Role>().ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +90,10 @@ namespace DataAccessObject
         {
             try
             {
-                return _context.Set<Role>().Find(id);
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<Role>().Find(id);
+                }
             }
             catch (Exception ex)
             {
@@ -81,13 +106,16 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.Roles.Find(role.Id);
-                if (checkExist != null)
+                using (var _context = new BookStoreDBContext())
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    var checkExist = _context.Roles.Find(role.Id);
+                    if (checkExist != null)
+                    {
+                        _context.Entry(checkExist).State = EntityState.Detached;
+                    }
+                    _context.Update(role);
+                    _context.SaveChanges();
                 }
-                _context.Update(role);
-                _context.SaveChanges();
             }
             catch (Exception ex)
             {
