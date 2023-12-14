@@ -13,10 +13,12 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
     public class DeleteModel : PageModel
     {
         private readonly IBookInStoreService _bookInStoreService;
+        private readonly IOrderService _orderService;
 
-        public DeleteModel(IBookInStoreService bookInStoreService)
+        public DeleteModel()
         {
-            _bookInStoreService = bookInStoreService;
+            _bookInStoreService = new BookInStoreService();
+            _orderService = new OrderService();
         }
 
         [BindProperty]
@@ -70,6 +72,25 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
 
                 if(bookinstore != null)
                 { 
+                    var orderDetailList = _orderService.GetAllOrderDetails().Where(x => x.BookInStoreId == (int)id).ToList();
+                    if (orderDetailList.Any())
+                    {
+                        IList<Order> orderList = new List<Order>();
+                        foreach (var orderDetail in orderDetailList)
+                        {
+                            var order = _orderService.GetOrderById((int)orderDetail.OrderId!);
+                            if(order.OrderStatus!.Equals("Processing", StringComparison.OrdinalIgnoreCase))
+                            {
+                                orderList.Add(order);
+                            }
+                        }
+                        if (orderDetailList.Any())
+                        {
+                            TempData["ResultFailed"] = "There's processing order with this book. Cannot Delete";
+                            return RedirectToPage("./Index");
+                        }
+                    }
+
                     _bookInStoreService.Delete(bookinstore);
 
                     TempData["ResultSuccess"] = "Delete Successfully";
