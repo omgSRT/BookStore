@@ -1,0 +1,50 @@
+﻿@page
+@model BookStoreRazorPage.Pages.OrderDetails.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Order Detail</h1>
+<p>
+        <input type="submit" value="Save" class="btn btn-primary" />
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDetail[0].Book) 
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDetail[0].Quantity) 
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDetail[0].Order) 
+            </th> 
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody> 
+@foreach (var item in Model.OrderDetail) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+                
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.Id)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-bookname="@item.Book.Name">Edit</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+

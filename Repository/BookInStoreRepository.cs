@@ -10,39 +10,33 @@ namespace Repository
 {
     public class BookInStoreRepository : IBookInStoreRepository
     {
-        private BookInStoreDAO _dao;
-        public BookInStoreRepository()
-        {
-            _dao = new BookInStoreDAO();
-        }
-
         public void Add(BookInStore bookInStore)
         {
-            _dao.Add(bookInStore);
+            BookInStoreDAO.SingletonInstance.Add(bookInStore);
         }
 
         public void Delete(BookInStore bookInStore)
         {
-            _dao.Delete(bookInStore);
+            BookInStoreDAO.SingletonInstance.Delete(bookInStore);
         }
 
         public IList<BookInStore> GetAll()
         {
-            return _dao.GetAll();
+            return BookInStoreDAO.SingletonInstance.GetAll();
         }
 
         public BookInStore? GetById(int id)
         {
-            return _dao.GetById(id);
+            return BookInStoreDAO.SingletonInstance.GetById(id);
         }
 
         public void Update(BookInStore bookInStore)
         {
-            _dao.Update(bookInStore);
+            BookInStoreDAO.SingletonInstance.Update(bookInStore);
         }
         public IList<BookInStore> GetAllWithIncludeBookAndStore()
         {
-            return _dao.GetAllWithIncludeBookAndStore();
+            return BookInStoreDAO.SingletonInstance.GetAllWithIncludeBookAndStore();
         }
     }
 }

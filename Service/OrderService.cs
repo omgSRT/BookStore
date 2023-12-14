@@ -73,5 +73,15 @@ namespace Service
         {
             return _repository.GetAllOrderDetailsWithBookAndBiS();
         }
+
+        public IList<Order> GetOrderByCustomerID(int id)
+        {
+            return _repository.GetOrderByCustomerID(id);
+        }
+
+        public IList<OrderDetail> GetAllOrderDetailByOrderId(int id)
+        {
+            return _repository.GetAllOrderDetailByOrderId(id);
+        }
     }
 }

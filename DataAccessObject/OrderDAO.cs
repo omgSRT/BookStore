@@ -161,18 +161,36 @@ namespace DataAccessObject
         {
             try
             {
-                var checkExist = _context.OrderDetails.Find(orderDetail.Id);
-                if (checkExist != null)
+                var checkExist_orderdetail = _context.OrderDetails.Find(orderDetail.Id);
+                if (checkExist_orderdetail != null)
                 {
-                    _context.Entry(checkExist).State = EntityState.Detached;
+                    _context.Entry(checkExist_orderdetail).State = EntityState.Detached;
                 }
+
+                var checkExit_order = _context.Orders.Find(orderDetail.OrderId);
+                if(checkExit_order != null)
+                {
+                    checkExit_order.TotalPrice = UpdateTotalPrice(checkExit_order.Id);
+                    _context.Entry(checkExit_order).State = EntityState.Detached;
+                }
+
                 _context.Update(orderDetail);
                 _context.SaveChanges();
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+        private decimal? UpdateTotalPrice(int id)
+        {
+            IList<OrderDetail> orderDetails = GetAllOrderDetailByOrderId(id);
+            decimal? totalPrice = 0;
+            foreach (var orderDetail in orderDetails) {
+                decimal? price = orderDetail.Book.Price;
+                totalPrice += price * orderDetail.Quantity;
+            }return totalPrice;
         }
         public IList<Order> GetAllOrdersWithIncludeCustomerAndStaff()
         {
@@ -204,5 +222,39 @@ namespace DataAccessObject
                 return new List<OrderDetail>();
             }
         }
+
+        public IList<Order> GetOrderByCustomerID(int id)
+        {
+            try
+            {
+                return _context.Set<Order>()
+                    .Where(c => c.CustomerId == id)
+                    .Include("Customer")
+                    .Include("Staff")
+                    .ToList();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<Order>();
+            }
+        }
+        public IList<OrderDetail> GetAllOrderDetailByOrderId(int id)
+        {
+            try
+            {
+                return _context.Set<OrderDetail>()
+                    .Where(c => c.OrderId == id)
+                    .Include("Book")
+                    .Include("Order")
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new List<OrderDetail>();
+            }
+        }
+        
     }
 }

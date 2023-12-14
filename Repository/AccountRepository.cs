@@ -3,6 +3,7 @@ using DataAccessObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,49 +11,43 @@ namespace Repository
 {
     public class AccountRepository : IAccountRepository
     {
-        private AccountDAO _dao;
-        public AccountRepository()
-        {
-            _dao = new AccountDAO();
-        }
-
         public void Add(Account account)
         {
-            _dao.Add(account);
+            AccountDAO.SingletonInstance.Add(account);
         }
 
         public void Delete(Account account)
         {
-            _dao.Delete(account);
+            AccountDAO.SingletonInstance.Delete(account);
         }
 
         public IList<Account> GetAll()
         {
-            return _dao.GetAll();
+            return AccountDAO.SingletonInstance.GetAll();
         }
 
         public Account? GetById(int id)
         {
-            return _dao.GetById(id);
+            return AccountDAO.SingletonInstance.GetById(id);
         }
 
         public Account? GetByUsernameAndPassword(string username, string password)
         {
-            return _dao.GetByUsernameAndPassword(username, password);
+            return AccountDAO.SingletonInstance.GetByUsernameAndPassword(username, password);
         }
 
         public void Update(Account account)
         {
-            _dao.Update(account);
+            AccountDAO.SingletonInstance.Update(account);
         }
         public IList<Account> GetAllWithIncludeRoleAndStore()
         {
-            return _dao.GetAllWithIncludeRoleAndStore();
+            return AccountDAO.SingletonInstance.GetAllWithIncludeRoleAndStore();
         }
 
         public List<Account> GetByName(string name)
         {
-            return _dao.GetByName(name);
+            return AccountDAO.SingletonInstance.GetByName(name);
         }
     }
 }

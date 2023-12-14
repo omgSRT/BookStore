@@ -10,35 +10,29 @@ namespace Repository
 {
     public class PublisherRepository : IPublisherRepository
     {
-        private PublisherDAO _dao;
-        public PublisherRepository()
-        {
-            _dao = new PublisherDAO();
-        }
-
         public void Add(Publisher publisher)
         {
-            _dao.Add(publisher);
+            PublisherDAO.SingletonInstance.Add(publisher);
         }
 
         public void Delete(Publisher publisher)
         {
-            _dao.Delete(publisher);
+            PublisherDAO.SingletonInstance.Delete(publisher);
         }
 
         public IList<Publisher> GetAll()
         {
-            return _dao.GetAll();
+            return PublisherDAO.SingletonInstance.GetAll();
         }
 
         public Publisher? GetById(int id)
         {
-            return _dao.GetById(id);
+            return PublisherDAO.SingletonInstance.GetById(id);
         }
 
         public void Update(Publisher publisher)
         {
-            _dao.Update(publisher);
+            PublisherDAO.SingletonInstance.Update(publisher);
         }
     }
 }

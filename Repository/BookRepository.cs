@@ -9,40 +9,34 @@ using System.Threading.Tasks;
 namespace Repository
 {
     public class BookRepository : IBookRepository
-    {
-        private BookDAO _dao;
-        public BookRepository()
-        {
-            _dao = new BookDAO();
-        }
-
+    { 
         public void Add(Book book)
         {
-            _dao.Add(book);
+            BookDAO.SingletonInstance.Add(book);
         }
 
         public void Delete(Book book)
         {
-            _dao.Delete(book);
+            BookDAO.SingletonInstance.Delete(book);
         }
 
         public IList<Book> GetAll()
         {
-            return _dao.GetAll();
+            return BookDAO.SingletonInstance.GetAll();
         }
 
         public Book? GetById(int id)
         {
-            return _dao.GetById(id);
+            return BookDAO.SingletonInstance.GetById(id);
         }
 
         public void Update(Book book)
         {
-            _dao.Update(book);
+            BookDAO.SingletonInstance.Update(book);
         }
         public IList<Book> GetAllWithIncludeCategoryAndPublisher()
         {
-            return _dao.GetAllWithIncludeCategoryAndPublisher();
+            return BookDAO.SingletonInstance.GetAllWithIncludeCategoryAndPublisher();
         }
     }
 }
