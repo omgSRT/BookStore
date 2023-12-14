@@ -21,5 +21,7 @@ namespace Repository
         OrderDetail? GetOrderDetailById(int id);
         IList<Order> GetAllOrdersWithIncludeCustomerAndStaff();
         IList<OrderDetail> GetAllOrderDetailsWithBookAndBiS();
+        IList<Order> GetOrderByCustomerID(int id);
+        IList<OrderDetail> GetAllOrderDetailByOrderId(int id);
     }
 }

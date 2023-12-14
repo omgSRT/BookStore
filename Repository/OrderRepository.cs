@@ -73,5 +73,15 @@ namespace Repository
         {
             return _dao.GetAllOrderDetailsWithBookAndBiS();
         }
+
+        public IList<Order> GetOrderByCustomerID(int id)
+        {
+            return _dao.GetOrderByCustomerID(id);
+        }
+
+        public IList<OrderDetail> GetAllOrderDetailByOrderId(int id)
+        {
+            return _dao.GetAllOrderDetailByOrderId(id);
+        }
     }
 }
