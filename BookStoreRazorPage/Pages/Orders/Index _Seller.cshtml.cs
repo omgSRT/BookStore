@@ -32,7 +32,7 @@ namespace BookStoreRazorPage.Pages.Orders
                     Order = _service.GetAllOrdersWithIncludeCustomerAndStaff();
                     return Page();
                 }
-            }return RedirectToPage("../Login");
+            }return RedirectToPage("../Logout");
         }
     }
 }
