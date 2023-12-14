@@ -25,9 +25,19 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category.IsActive" class="control-label"></label>
-                <input asp-for="Category.IsActive" class="form-control" />
+                <select asp-for="Category.IsActive" class="form-control">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
                 <span asp-validation-for="Category.IsActive" class="text-danger"></span>
             </div>
+            @if (TempData["ErrorCreateCategory"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorCreateCategory"]
+                </div>
+                TempData.Clear();
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

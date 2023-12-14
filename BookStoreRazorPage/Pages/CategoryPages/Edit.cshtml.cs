@@ -23,7 +23,7 @@ namespace BookStoreRazorPage.Pages.CategoryPages
         [BindProperty]
         public Category Category { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int id)
         {
             var loginSession = HttpContext.Session.GetString("account");
             if (loginSession == null)
@@ -36,12 +36,8 @@ namespace BookStoreRazorPage.Pages.CategoryPages
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var category = _categoryService.GetById(id.Value);
+            var category = _categoryService.GetById(id);
 
             if (category == null)
             {
@@ -52,7 +48,7 @@ namespace BookStoreRazorPage.Pages.CategoryPages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +57,23 @@ namespace BookStoreRazorPage.Pages.CategoryPages
 
             try
             {
+                var name = Category.Name;
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    TempData["ErrorEditCategory"] = "name is required";
+                    return Page();
+                }
+                var description = Category.Description;
+                if (string.IsNullOrWhiteSpace(description))
+                {
+                    TempData["ErrorEditCategory"] = "description is required";
+                    return Page();
+                }
                 _categoryService.Update(Category);
+                if(Category.IsActive == false)
+                {
+
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
