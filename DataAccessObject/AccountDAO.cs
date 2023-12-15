@@ -92,7 +92,10 @@ namespace DataAccessObject
             {
                 using (var _context = new BookStoreDBContext())
                 {
-                    return _context.Set<Account>().Find(id);
+                    return _context.Set<Account>()
+                        .Include(a => a.Role)
+                        .Include(a => a.Store)
+                        .FirstOrDefault(a => a.Id == id);
                 }
             }
             catch (Exception ex)

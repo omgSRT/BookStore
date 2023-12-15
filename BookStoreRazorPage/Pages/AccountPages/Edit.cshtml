@@ -44,7 +44,7 @@
                 <input asp-for="Account.DateOfBirth" class="form-control" />
                 <span asp-validation-for="Account.DateOfBirth" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="Account.IsActive" class="control-label"></label>
                 <input asp-for="Account.IsActive" class="form-control" readonly />
                 <span asp-validation-for="Account.IsActive" class="text-danger"></span>
