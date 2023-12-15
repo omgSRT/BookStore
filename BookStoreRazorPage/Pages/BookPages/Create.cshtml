@@ -56,19 +56,9 @@
                 <select asp-for="Book.PublisherId" class ="form-control" asp-items="ViewBag.PublisherId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Book.Avatar" class="control-label"></label>
-                <input asp-for="Book.Avatar" class="form-control" />
-                <span asp-validation-for="Book.Avatar" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Book.Price" class="control-label"></label>
                 <input asp-for="Book.Price" class="form-control" />
                 <span asp-validation-for="Book.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Book.Description" class="control-label"></label>
-                <input asp-for="Book.Description" class="form-control" />
-                <span asp-validation-for="Book.Description" class="text-danger"></span>
             </div>
             @if (TempData["Error"] != null)
             {

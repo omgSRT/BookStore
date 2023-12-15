@@ -14,10 +14,14 @@ namespace BookStoreRazorPage.Pages.BookPages
     public class EditModel : PageModel
     {
         private readonly IBookService _bookService;
+        private readonly ICategoryService _categoryService;
+        private readonly IPublisherService _publisherService;
 
         public EditModel()
         {
             _bookService = new BookService();
+            _categoryService = new CategoryService();
+            _publisherService = new PublisherService();
         }
 
         [BindProperty]
@@ -45,6 +49,8 @@ namespace BookStoreRazorPage.Pages.BookPages
             }
 
             Book = book;
+            ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
+            ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name");
             return Page();
         }
 
@@ -59,6 +65,8 @@ namespace BookStoreRazorPage.Pages.BookPages
                     var updateBook = _bookService.GetById(Book.Id);
                     updateBook!.Amount = Book.Amount;
                     _bookService.Update(updateBook!);
+                    ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
+                    ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name");
 
                     TempData["ResultSuccess"] = "Update Successfully";
                     return RedirectToPage("./Index");

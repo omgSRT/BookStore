@@ -13,10 +13,14 @@ namespace BookStoreRazorPage.Pages.BookPages
     public class CreateModel : PageModel
     {
         private readonly IBookService _bookService;
+        private readonly ICategoryService _categoryService;
+        private readonly IPublisherService _publisherService;
 
         public CreateModel()
         {
             _bookService = new BookService();
+            _categoryService = new CategoryService();
+            _publisherService = new PublisherService();
         }
 
         public IActionResult OnGet()
@@ -26,13 +30,18 @@ namespace BookStoreRazorPage.Pages.BookPages
                 var loginSession = HttpContext.Session.GetString("account");
                 if (loginSession == null)
                 {
-                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    TempData["ErrorLogin"] = "You need to login to access";
                     return RedirectToPage("../Login");
                 }
-                else if (!loginSession.Equals("admin"))
+                else if (!loginSession.Equals("seller"))
                 {
                     TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                     return RedirectToPage("../Error");
+                }
+                else
+                {
+                    ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
+                    ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name"); ;
                 }
                 return Page();
             }

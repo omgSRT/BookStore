@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
 using Service;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStoreRazorPage.Pages.BookPages
 {
     public class DetailsModel : PageModel
     {
         private readonly IBookService _bookService;
+        private readonly ICategoryService _categoryService;
+        private readonly IPublisherService _publisherService;
 
         public DetailsModel()
         {
             _bookService = new BookService();
+            _categoryService = new CategoryService();
+            _publisherService = new PublisherService();
         }
 
       public Book Book { get; set; } = default!; 
@@ -49,6 +54,8 @@ namespace BookStoreRazorPage.Pages.BookPages
                 }
                 else
                 {
+                    ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
+                    ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name");
                     Book = book;
                 }
                 return Page();
