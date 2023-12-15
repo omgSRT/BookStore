@@ -18,6 +18,9 @@ namespace BookStoreRazorPage.Pages.BookPages
         {
             _bookService = bookService;
         }
+        [BindProperty]
+        public string SearchValue { get; set; } = default!;
+
         [BindProperty(SupportsGet = true)]
         public int curentPage { get; set; } = 1;
         public int pageSize { get; set; } = 5;
@@ -34,24 +37,6 @@ namespace BookStoreRazorPage.Pages.BookPages
             new SelectListItem { Value = "false", Text = "Inactive"}
         };
 
-        private void UpdatePageData(string searchKeyword = null)
-        {
-            var books = _bookService.GetAll();
-            BookSelectList = new SelectList(books, "Id", "Name");
-
-            if (string.IsNullOrEmpty(searchKeyword))
-            {
-                count = _bookService.GetAllWithIncludeCategoryAndPublisher().Count();
-                Book = _bookService.GetAllWithIncludeCategoryAndPublisher().Skip((curentPage - 1) * pageSize).Take(pageSize)
-                    .ToList(); ;
-            }
-            else
-            {
-                count = _bookService.GetByName(searchKeyword).Count();
-                Book = _bookService.GetByName(searchKeyword).Skip((curentPage - 1) * pageSize).Take(pageSize)
-                    .ToList();
-            }
-        }
 
         public IActionResult OnGet()
         {
@@ -66,42 +51,47 @@ namespace BookStoreRazorPage.Pages.BookPages
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
-            UpdatePageData();
 
             return Page();
         }
 
-
-        public IActionResult OnPostEditAccount(int id)
-        {
-            var isActive = HttpContext.Request.Form["IsActive"];
-            var storeId = int.Parse(HttpContext.Request.Form["StoreId"]);
-            var bookToUpdate = _bookService.GetById(id);
-            bookToUpdate.IsActive = isActive == "true" ? true : false;
-            _bookService.Update(bookToUpdate);
-            HttpContext.Session.SetString("UpdateSuccessMessage", "Account updated successfully!");
-
-            return RedirectToPage("./Index");
-        }
         public IActionResult OnPost()
         {
-
-
-            var loginSession = HttpContext.Session.GetString("account");
-            if (loginSession == null)
+            if (SearchValue is null)
             {
-                TempData["ErrorLogin"] = "You need to login to access this page";
-                return RedirectToPage("../Login");
+                count = _bookService.GetAll().Count();
+                Book = _bookService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
             }
-            else if (!loginSession.Equals("admin"))
+            else if (SearchValue.Trim().Length == 0)
             {
-                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
-                return RedirectToPage("../Error");
+                count = _bookService.GetAll().Count();
+                Book = _bookService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
             }
-
-            string searchKeyword = Request.Form["search"];
-            UpdatePageData(searchKeyword);
-            return Page();
+            else
+            {
+                count = _bookService.GetAll()
+                    .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
+                    .Count();
+                Book = _bookService.GetAll()
+                    .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                if (Book.Count == 0)
+                {
+                    TempData["ResultFailed"] = "There's no result matched " + SearchValue;
+                    count = _bookService.GetAll().Count();
+                    Book = _bookService.GetAll()
+                        .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                        .ToList();
+                }
+                return Page();
+            }
         }
     }
 }

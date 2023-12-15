@@ -22,6 +22,13 @@ namespace BookStoreRazorPage.Pages.StorePages
         }
 
         public IList<Store> Store { get;set; } = default!;
+        [BindProperty]
+        public string SearchValue { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public int curentPage { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
+        public int count { get; set; }
+        public int totalPages => (int)Math.Ceiling(Decimal.Divide(count, pageSize));
 
         public IActionResult OnGet()
         {
@@ -49,6 +56,44 @@ namespace BookStoreRazorPage.Pages.StorePages
                 TempData["Error"] = "Error Occurred. Please contact admin";
                 Console.WriteLine(ex.ToString());
                 return RedirectToPage("../Error");
+            }
+        }
+        public IActionResult OnPost()
+        {
+            if (SearchValue is null)
+            {
+                count = _storeService.GetAll().Count();
+                Store = _storeService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
+            }
+            else if (SearchValue.Trim().Length == 0)
+            {
+                count = _storeService.GetAll().Count();
+                Store = _storeService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
+            }
+            else
+            {
+                count = _storeService.GetAll()
+                    .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
+                    .Count();
+                Store = _storeService.GetAll()
+                    .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                if (Store.Count == 0)
+                {
+                    TempData["ResultFailed"] = "There's no result matched " + SearchValue;
+                    count = _storeService.GetAll().Count();
+                    Store = _storeService.GetAll()
+                        .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                        .ToList();
+                }
+                return Page();
             }
         }
     }

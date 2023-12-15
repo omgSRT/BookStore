@@ -10,10 +10,12 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<form id="searchForm" method="post">
-    <input type="text" id="searchInput" name="search" placeholder="Search by name" style="height: 38px;" />
-    <button type="submit" class="btn btn-secondary mb-1">Search</button>
-</form>
+<div>
+    <form method="post">
+        <input type="text" asp-for="SearchValue" class="" style="height: 38px;" />
+        <input type="submit" value="Search" class="btn btn-secondary mb-1" />
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -58,7 +60,6 @@
     </thead>
     <tbody>
 @foreach (var item in Model.Book) {
-    <form id="editIsActiveForm-@item.Id" asp-page-handler="EditAccount" asp-route-id="@item.Id" method="post">
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -75,8 +76,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Version)
             </td>
-                    <select asp-for="@item.IsActive" asp-items="@Model.IsActiveOptions" name="IsActive" id="isActiveSelect-@item.Id" onchange="changedButton(@item.Id)">
-                    </select>
+               @Html.DisplayFor(modelItem => item.IsActive)
               
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
@@ -96,23 +96,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Publisher.Name)
             </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    @if (item.IsActive == true)
+                    {
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
 
         </tr>
-       </form>
        }
-        @if (HttpContext.Session.GetString("UpdateSuccessMessage") != null)
-        {
-            <div class="alert alert-success" id="successMessage">
-                <p>@HttpContext.Session.GetString("UpdateSuccessMessage")</p>
-            </div>
-        }
-        @{
-            // This block is C# code, not Razor HTML markup
-            if (HttpContext.Session.GetString("UpdateSuccessMessage") != null)
-            {
-                HttpContext.Session.Remove("UpdateSuccessMessage");
-            }
-        }
 }
     </tbody>
 </table>
@@ -127,32 +121,3 @@
         }
     </ul>
 </div>
-
-<script>
-    function showStoresSelectList(select, id) {
-        changedButton(id)
-        var selectedValue = select.value;
-        var storeDropdown = document.getElementById('storeDropdown-' + id);
-
-        if (selectedValue === '1') {
-            storeDropdown.style.display = 'block';
-        } else {
-            storeDropdown.style.display = 'none';
-        }
-    }
-
-    function changedButton(id) {
-        var submitButton = document.getElementById("submitButton-" + id);
-        if (submitButton) {
-            submitButton.style.display = "block"; // Show the submit button when any select element changes
-        }
-    }
-
-    setTimeout(function () {
-        var successMessage = document.getElementById('successMessage');
-        if (successMessage) {
-            successMessage.style.display = 'none'; // Hide the message
-        }
-    }, 3000); // 5 s
-
-</script>
