@@ -10,11 +10,11 @@ using Service;
 
 namespace BookStoreRazorPage.Pages.Orders
 {
-    public class Index_SellerModel : PageModel
+    public class IndexSellerModel : PageModel
     {
         private readonly IOrderService _service;
 
-        public Index_SellerModel()
+        public IndexSellerModel()
         {
             _service = new OrderService();
         }
@@ -24,15 +24,15 @@ namespace BookStoreRazorPage.Pages.Orders
         public IActionResult OnGetAsync()
         {
             string role = HttpContext.Session.GetString("account");
-            int id = (int)HttpContext.Session.GetInt32("accountId");
+            var id = (int)HttpContext.Session.GetInt32("accountId");
             if (role != null )
             {
                 if(role.Equals("seller"))
                 {
-                    Order = _service.GetAllOrdersWithIncludeCustomerAndStaff();
+                    Order = _service.GetAllOrdersWithIncludeCustomerAndStaff().OrderByDescending(o => o.CreateDate).ToList();
                     return Page();
                 }
-            }return RedirectToPage("../Login");
+            }return RedirectToPage("../Logout");
         }
     }
 }

@@ -7,72 +7,87 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
+using Microsoft.VisualStudio.Debugger.Contracts;
 
 namespace BookStoreRazorPage.Pages.Orders
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IOrderService _service;
 
-        public EditModel(BusinessObject.BookStoreDBContext context)
+        public EditModel()
         {
-            _context = context;
+            _service = new OrderService();
         }
 
         [BindProperty]
         public Order Order { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Orders == null)
+            string role = HttpContext.Session.GetString("account");
+            int accountId = (int)HttpContext.Session.GetInt32("accountId");
+            if (role != null)
             {
-                return NotFound();
-            }
+                if (role.Equals("customer") || role.Equals("seller"))
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-            var order =  await _context.Orders.FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
-            {
-                return NotFound();
+                    var order = _service.GetOrderById(id);
+                    if (order == null)
+                    {
+                        return NotFound();
+                    }
+                    Order = order;
+                    IList<string> listStatus = new List<string> { "Processing", "Completed", "Canceled" };
+                    ViewData["Status"] = new SelectList(listStatus);
+                    return Page();
+                }
             }
-            Order = order;
-           ViewData["CustomerId"] = new SelectList(_context.Accounts, "Id", "Password");
-           ViewData["StaffId"] = new SelectList(_context.Accounts, "Id", "Password");
-            return Page();
+            return RedirectToPage("../Logout");
+            
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Order).State = EntityState.Modified;
+            
 
             try
             {
-                await _context.SaveChangesAsync();
+                if(ModelState.IsValid)
+                {
+                    var _updateOrder = _service.GetOrderById(Order.Id);
+                    if( _updateOrder != null)
+                    {
+                        _updateOrder = Order;
+                        _service.UpdateOrder(_updateOrder);
+                        var role = HttpContext.Session.GetString("account");
+                        if (role.Equals("seller"))
+                        {
+                            return RedirectToPage("../Orders/IndexSeller");
+                        }else if (role.Equals("customer"))
+                        {
+                            return RedirectToPage("../Orders/IndexCustomer");
+                        }
+                        return RedirectToPage("Logout");
+                    }
+                    
+                }return Page();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
-                if (!OrderExists(Order.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
 
-            return RedirectToPage("./Index");
         }
 
-        private bool OrderExists(int id)
-        {
-          return (_context.Orders?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

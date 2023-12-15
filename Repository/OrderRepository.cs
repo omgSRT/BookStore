@@ -70,12 +70,12 @@ namespace Repository
 
         public IList<Order> GetOrderByCustomerID(int id)
         {
-            return _dao.GetOrderByCustomerID(id);
+            return OrderDAO.SingletonInstance.GetOrderByCustomerID(id);
         }
 
         public IList<OrderDetail> GetAllOrderDetailByOrderId(int id)
         {
-            return _dao.GetAllOrderDetailByOrderId(id);
+            return OrderDAO.SingletonInstance.GetAllOrderDetailByOrderId(id);
         }
     }
 }

@@ -10,11 +10,11 @@ using Service;
 
 namespace BookStoreRazorPage.Pages.Orders
 {
-    public class Index_CustomerModel : PageModel
+    public class IndexCustomerModel : PageModel
     {
         private readonly IOrderService _service;
 
-        public Index_CustomerModel()
+        public IndexCustomerModel()
         {
             _service = new OrderService();
         }
@@ -29,10 +29,10 @@ namespace BookStoreRazorPage.Pages.Orders
             {
                 if (role.Equals("customer"))
                 {
-                    Order = _service.GetOrderByCustomerID(id);
+                    Order = _service.GetOrderByCustomerID(id).OrderBy(o => o.CreateDate).ToList();
                     return Page();
                 }
-            }return RedirectToPage("../Login");
+            }return RedirectToPage("../Logout");
         }
     }
 }

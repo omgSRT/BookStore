@@ -6,57 +6,67 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
+using System.Data;
 
 namespace BookStoreRazorPage.Pages.Orders
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IOrderService _service;
 
-        public DeleteModel(BusinessObject.BookStoreDBContext context)
+        public DeleteModel()
         {
-            _context = context;
+            _service = new OrderService();
         }
 
         [BindProperty]
       public Order Order { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGetAsync(int id)
         {
-            if (id == null || _context.Orders == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                Order = order;
-            }
-            return Page();
+            var role = HttpContext.Session.GetString("account");
+            if(role.Equals("seller") || role.Equals("customer")) {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+                var order = _service.GetOrderById(id);
+                if (order == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Order = order;
+                }
+                return Page();
+            }return RedirectToPage("../Logout");
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPostAsync(int id)
         {
-            if (id == null || _context.Orders == null)
+            if (id == null )
             {
                 return NotFound();
             }
-            var order = await _context.Orders.FindAsync(id);
+            var order = _service.GetOrderById(id);
 
             if (order != null)
             {
                 Order = order;
-                _context.Orders.Remove(Order);
-                await _context.SaveChangesAsync();
-            }
+                _service.DeleteOrder(Order);
 
-            return RedirectToPage("./Index");
+            }
+            var role = HttpContext.Session.GetString("account");
+            if (role.Equals("seller"))
+            {
+                return RedirectToPage("../Orders/IndexSeller");
+            }
+            else if (role.Equals("customer"))
+            {
+                return RedirectToPage("../Orders/IndexCustomer");
+            }return RedirectToPage("../Logout");
         }
     }
 }

@@ -6,9 +6,20 @@
 }
 
 <h1>Order Detail</h1>
-<p>
-        <input type="submit" value="Save" class="btn btn-primary" />
-</p>
+
+@{
+    if (HttpContext.Session.GetString("account").Equals("seller"))
+    {
+        <div>
+            <a asp-page="../Orders/IndexSeller" >Back to List</a>
+        </div>
+    }else if (HttpContext.Session.GetString("account").Equals("seller"))
+    {
+        <div>
+            <a asp-page="../Orders/IndexCustomer" >Back to List</a>
+        </div>
+    }
+}
 
 <table class="table">
     <thead>

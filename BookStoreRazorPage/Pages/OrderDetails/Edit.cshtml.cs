@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
 using Service;
+using System.Data;
 
 namespace BookStoreRazorPage.Pages.OrderDetails
 {
@@ -56,9 +57,18 @@ namespace BookStoreRazorPage.Pages.OrderDetails
                     return Page();
                 }
                 _orderService.UpdateOrderDetail(OrderDetail);
-                
-                return RedirectToPage("./Index", new { orderId = OrderDetail.OrderId });
-            }catch (Exception ex)
+                var role = HttpContext.Session.GetString("account");
+                if (role.Equals("seller"))
+                {
+                    return RedirectToPage("../Orders/IndexSeller", new { orderId = OrderDetail.OrderId });
+                }
+                else if (role.Equals("customer"))
+                {
+                    return RedirectToPage("../Orders/IndexCustomer", new { orderId = OrderDetail.OrderId });
+                }
+                return RedirectToPage("Logout");
+            }
+            catch (Exception ex)
             {
                 Mess = ex.Message;
                 return Page();

@@ -26,29 +26,14 @@ namespace BookStoreRazorPage.Pages.OrderDetails
             string role = HttpContext.Session.GetString("account");
             if (role != null)
             {
-                if (role.Equals("customer") || role.Equals("staff"))
+                if (role.Equals("customer") || role.Equals("seller"))
                 {
                     OrderDetail = _service.GetAllOrderDetailByOrderId(orderId);
                     return Page();
                 }
             }
-            return RedirectToPage("../Login");
+            return RedirectToPage("../Logout");
         }
-        public IActionResult OnPost()
-        {
-            string role = HttpContext.Session.GetString("account");
-            if (role != null)
-            {
-                if (role.Equals("customer"))
-                {
-                    return RedirectToPage("../Orders/Index_Customer");
-                }
-                else if (role.Equals("seller"))
-                {
-                    return RedirectToPage("../Orders/Index_Seller");
-                }
-            }
-            return RedirectToPage("../Login");
-        }
+        
     }
 }
