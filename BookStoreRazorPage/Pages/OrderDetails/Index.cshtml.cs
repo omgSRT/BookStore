@@ -34,7 +34,10 @@ namespace BookStoreRazorPage.Pages.OrderDetails
             }
             return RedirectToPage("../Logout");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
         }
         public IActionResult OnPost()
         {
@@ -51,6 +54,9 @@ namespace BookStoreRazorPage.Pages.OrderDetails
                 }
             }
             return RedirectToPage("../Logout");
+<<<<<<< HEAD
+>>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
+=======
 >>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
         }
         
