@@ -57,16 +57,7 @@ namespace BookStoreRazorPage.Pages.OrderDetails
                     return Page();
                 }
                 _orderService.UpdateOrderDetail(OrderDetail);
-                var role = HttpContext.Session.GetString("account");
-                if (role.Equals("seller"))
-                {
-                    return RedirectToPage("../Orders/IndexSeller", new { orderId = OrderDetail.OrderId });
-                }
-                else if (role.Equals("customer"))
-                {
-                    return RedirectToPage("../Orders/IndexCustomer", new { orderId = OrderDetail.OrderId });
-                }
-                return RedirectToPage("Logout");
+                return RedirectToPage("../OrderDetails/Index", new { orderId = OrderDetail.OrderId });
             }
             catch (Exception ex)
             {

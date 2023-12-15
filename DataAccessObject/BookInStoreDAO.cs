@@ -142,5 +142,25 @@ namespace DataAccessObject
                 return new List<BookInStore>();
             }
         }
+        public IList<BookInStore> GetByStoreId(int id)
+        {
+            try
+            {
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Set<BookInStore>()
+                        .Include(bis => bis.Book)
+                        .Include(bis => bis.Book!.Category)
+                        .Include(bis => bis.Book!.Publisher)
+                        .Include(bis => bis.Store)
+                        .Where(b => b.StoreId == id).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

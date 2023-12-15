@@ -44,5 +44,10 @@ namespace Service
         {
             return _repository.GetAllWithIncludeBookAndStore();
         }
+
+        public IList<BookInStore> GetByStoreId(int id)
+        {
+            return _repository.GetByStoreId(id);
+        }
     }
 }

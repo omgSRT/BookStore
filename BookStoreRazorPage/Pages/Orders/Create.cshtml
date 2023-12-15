@@ -7,51 +7,54 @@
 
 <h1>Create</h1>
 
-<h4>Order</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Order.TotalPrice" class="control-label"></label>
-                <input asp-for="Order.TotalPrice" class="form-control" />
-                <span asp-validation-for="Order.TotalPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.CreateDate" class="control-label"></label>
-                <input asp-for="Order.CreateDate" class="form-control" />
-                <span asp-validation-for="Order.CreateDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.ShippingAddress" class="control-label"></label>
-                <input asp-for="Order.ShippingAddress" class="form-control" />
-                <span asp-validation-for="Order.ShippingAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.CustomerId" class="control-label"></label>
-                <select asp-for="Order.CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.OrderStatus" class="control-label"></label>
-                <input asp-for="Order.OrderStatus" class="form-control" />
-                <span asp-validation-for="Order.OrderStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.StaffId" class="control-label"></label>
-                <select asp-for="Order.StaffId" class ="form-control" asp-items="ViewBag.StaffId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.BookInStore[0].Book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookInStore[0].Store)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookInStore[0].Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookInStore[0].Book.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.BookInStore) {
+        <tr>
+            <form>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Book.Name)
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Store.Name)
+                </td>
+                <td>
+                    <select class="form-control" asp-for="@Model.Quantity">
+                            @{
+                                for (int i = 1; i <= item.Amount; i++)
+                                {
+                                <option value="@i">@i</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Book.Price) VND
+                </td>
+                <td>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+                    <input type="submit" value="Order" class="btn btn-primary" asp-route-BookInStoreId="@item.Id" asp-route-BookId="@item.BookId" />
+                </td>
+            </form>
+        </tr>
 }
+    </tbody>
+</table>
