@@ -15,10 +15,12 @@ namespace BookStoreRazorPage.Pages.OrderDetails
     public class EditModel : PageModel
     {
         private readonly IOrderService _orderService;
+        private readonly IBookInStoreService _bookInStoreService;
 
         public EditModel()
         {
             _orderService = new OrderService();
+            _bookInStoreService= new BookInStoreService();
         }
 
         [BindProperty]
@@ -27,6 +29,7 @@ namespace BookStoreRazorPage.Pages.OrderDetails
         public string Mess { get;set; }
         [BindProperty]
         public string BookName { get; set; }
+        private int? currentQuantity { get; set; }
 
         public IActionResult OnGetAsync(int id, string bookname)
         {
@@ -44,6 +47,7 @@ namespace BookStoreRazorPage.Pages.OrderDetails
 
             OrderDetail = orderdetail;
             BookName = bookname;
+            currentQuantity = OrderDetail.Quantity;
             return Page();
         }
 
@@ -57,12 +61,18 @@ namespace BookStoreRazorPage.Pages.OrderDetails
                     return Page();
                 }
                 _orderService.UpdateOrderDetail(OrderDetail);
+                var updateBookInStore = _bookInStoreService.GetById((int)OrderDetail.BookInStoreId);
+                updateBookInStore.Amount += (currentQuantity - OrderDetail.Quantity);
+                _bookInStoreService.Update(updateBookInStore);
+
+                TempData["ResultSuccess"] = "Update Successfully";
                 return RedirectToPage("../OrderDetails/Index", new { orderId = OrderDetail.OrderId });
             }
             catch (Exception ex)
             {
-                Mess = ex.Message;
-                return Page();
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
         }
     }

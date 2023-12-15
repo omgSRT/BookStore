@@ -31,7 +31,8 @@ namespace BookStoreRazorPage.Pages.Orders
         public IList<BookInStore> BookInStore { get;set; } = default!;
         public IList<Store> StoreList { get;set; }
         public int StoreId { get;set; }
-        public int Quantity { get;set; }
+        [BindProperty]
+        public int _Quantity { get;set; }
         private IList<OrderDetail> Card{ get;set; } = default!;
 
 
@@ -49,36 +50,57 @@ namespace BookStoreRazorPage.Pages.Orders
             return RedirectToPage("../Logout");
             
         }
-        public async Task<IActionResult> OnPostAsync(int _BookInStoreId, int _BookId)
+        public IActionResult OnPostAsync()
         {
+            
 
-            var id = (int)HttpContext.Session.GetInt32("accountId");
-            var address = _accountService.GetById(id).Address;
-            var price = _bookService.GetById(_BookId).Price;
-
-            var oder = new Order()
+            try
             {
-                TotalPrice = Quantity * price,
-                ShippingAddress = address,
-                CustomerId = id,
-                OrderStatus ="Processing",
-                CreateDate = DateTime.Now
-            };
-            _orderService.AddOrder(oder);
+                if (ModelState.IsValid)
+                {
+                    int _BookInStoreId = Convert.ToInt32(Request.Form["_BookInStoreId"]);
+                    int _BookId = Convert.ToInt32(Request.Form["_BookId"]);
+                    var id = (int)HttpContext.Session.GetInt32("accountId");
+                    var address = _accountService.GetById(id).Address;
+                    var price = _bookService.GetById(_BookId).Price;
 
-            var orderDetail = new OrderDetail()
+                    var oder = new Order()
+                    {
+                        TotalPrice = _Quantity * price,
+                        ShippingAddress = address,
+                        CustomerId = id,
+                        OrderStatus = "Processing",
+                        CreateDate = DateTime.Now
+                    };
+                    _orderService.AddOrder(oder);
+
+                    var orderDetail = new OrderDetail()
+                    {
+                        OrderId = oder.Id,
+                        BookInStoreId = _BookInStoreId,
+                        BookId = _BookId,
+                        Quantity = _Quantity,
+                    };
+                    _orderService.AddOrderDetail(orderDetail);
+
+                    var updateBookInStore = _bookInStoreService.GetById(_BookInStoreId);
+                    updateBookInStore.Amount -= _Quantity;
+                    _bookInStoreService.Update(updateBookInStore);
+
+                    TempData["ResultSuccess"] = "Create Successfully";
+                    return RedirectToPage("/Orders/IndexCustomer");
+                    
+                }
+
+                TempData["ResultFailed"] = "Error Occurred. Cannot Create";
+                return RedirectToPage("/Orders/IndexCustomer");
+            }
+            catch (Exception ex)
             {
-                OrderId = oder.Id,
-                BookInStoreId = _BookInStoreId,
-                BookId = _BookId,
-                Quantity = Quantity,
-            };
-            _orderService.AddOrderDetail(orderDetail);
-
-            var updateBookInStore = _bookInStoreService.GetById(_BookInStoreId);
-            updateBookInStore.Amount -= Quantity;
-            _bookInStoreService.Update(updateBookInStore);
-            return RedirectToPage("/Orders/IndexCustomer");
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
+            }
         }
         
     }

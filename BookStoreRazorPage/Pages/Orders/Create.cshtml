@@ -6,11 +6,23 @@
 }
 
 <h1>Create</h1>
+@{
+    if (HttpContext.Session.GetString("account").Equals("seller"))
+    {
 
+        <a asp-page="../Orders/IndexSeller">Back to List</a>
+
+    }
+    else if (HttpContext.Session.GetString("account").Equals("customer"))
+    {
+
+        <a asp-page="../Orders/IndexCustomer">Back to List</a>
+
+    }
+}
 <table class="table">
     <thead>
         <tr>
-            
             <th>
                 @Html.DisplayNameFor(model => model.BookInStore[0].Book)
             </th>
@@ -27,34 +39,35 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.BookInStore) {
-        <tr>
-            <form>
+        @foreach (var item in Model.BookInStore)
+        {
+            <tr>
                 <td>
-                        @Html.DisplayFor(modelItem => item.Book.Name)
+                    @Html.DisplayFor(modelItem => item.Book.Name)
                 </td>
                 <td>
-                        @Html.DisplayFor(modelItem => item.Store.Name)
+                    @Html.DisplayFor(modelItem => item.Store.Name)
                 </td>
                 <td>
-                    <select class="form-control" asp-for="@Model.Quantity">
+                    <form method="post" >
+                        <select class="form-control" asp-for="_Quantity" name="_Quantity">
                             @{
                                 for (int i = 1; i <= item.Amount; i++)
                                 {
-                                <option value="@i">@i</option>
+                                    <option value="@i">@i</option>
                                 }
                             }
-                    </select>
+                        </select>
+                        <input type="hidden" name="_BookInStoreId" value="@item.Id" />
+                        <input type="hidden" name="_BookId" value="@item.BookId" />
+                        <input type="submit" value="Order" class="btn btn-primary" />
+                    </form>
                 </td>
                 <td>
-                        @Html.DisplayFor(modelItem => item.Book.Price) VND
+                    @Html.DisplayFor(modelItem => item.Book.Price) VND
                 </td>
-                <td>
-
-                    <input type="submit" value="Order" class="btn btn-primary" asp-route-BookInStoreId="@item.Id" asp-route-BookId="@item.BookId" />
-                </td>
-            </form>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
+

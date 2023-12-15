@@ -51,8 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Order.Id)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-bookname="@item.Book.Name">Edit</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-bookname="@item.Book.Name">Edit</a> 
             </td>
         </tr>
 }

@@ -55,8 +55,14 @@ namespace BookStoreRazorPage.Pages.Orders
             if (order != null)
             {
                 Order = order;
+                
+                var orderDetails = _service.GetAllOrderDetailByOrderId(Order.Id);
+                foreach (var orderDetail in orderDetails)
+                {
+                    _service.DeleteOrderDetail(orderDetail);
+                }
                 _service.DeleteOrder(Order);
-
+                TempData["ResultSuccess"] = "Delete Successfully";
             }
             var role = HttpContext.Session.GetString("account");
             if (role.Equals("seller"))

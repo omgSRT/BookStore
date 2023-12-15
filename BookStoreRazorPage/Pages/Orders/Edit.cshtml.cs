@@ -67,6 +67,7 @@ namespace BookStoreRazorPage.Pages.Orders
                     {
                         _updateOrder = Order;
                         _service.UpdateOrder(_updateOrder);
+                        TempData["ResultSuccess"] = "Edit Successfully";
                         var role = HttpContext.Session.GetString("account");
                         if (role.Equals("seller"))
                         {
@@ -78,7 +79,9 @@ namespace BookStoreRazorPage.Pages.Orders
                         return RedirectToPage("Logout");
                     }
                     
-                }return Page();
+                }
+                TempData["ResultFailed"] = "Error Occurred. Cannot Edit";
+                return Page();
             }
             catch (DbUpdateConcurrencyException ex)
             {
