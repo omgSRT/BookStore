@@ -7,21 +7,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
-using Repository;
+using Service;
 
 namespace BookStoreRazorPage.Pages.BookInStorePages
 {
     public class EditModel : PageModel
     {
-        private readonly IBookInStoreRepository _bookInStoreRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly IAccountRepository _accountRepository;
+        private readonly IBookInStoreService _bookInStoreService;
+        private readonly IBookService _bookService;
 
         public EditModel()
         {
-            _accountRepository = new AccountRepository();
-            _bookRepository = new BookRepository();
-            _bookInStoreRepository = new BookInStoreRepository();
+            _bookInStoreService = new BookInStoreService();
+            _bookService = new BookService();
         }
 
         [BindProperty]
@@ -47,13 +45,13 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                     return NotFound();
                 }
 
-                var bookinstore = _bookInStoreRepository.GetById((int)id);
+                var bookinstore = _bookInStoreService.GetById((int)id);
                 if (bookinstore == null)
                 {
                     return NotFound();
                 }
                 BookInStore = bookinstore;
-                ViewData["BookId"] = new SelectList(_bookRepository.GetAll(), "Id", "Name");
+                ViewData["BookId"] = new SelectList(_bookService.GetAll(), "Id", "Name");
                 return Page();
             }
             catch (Exception ex)
@@ -72,9 +70,9 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
             {
                 if (ModelState.IsValid)
                 {
-                    var updateBookInStore = _bookInStoreRepository.GetById(BookInStore.Id);
+                    var updateBookInStore = _bookInStoreService.GetById(BookInStore.Id);
                     updateBookInStore!.Amount = BookInStore.Amount;
-                    _bookInStoreRepository.Update(updateBookInStore!);
+                    _bookInStoreService.Update(updateBookInStore!);
 
                     TempData["ResultSuccess"] = "Update Successfully";
                     return RedirectToPage("./Index");
