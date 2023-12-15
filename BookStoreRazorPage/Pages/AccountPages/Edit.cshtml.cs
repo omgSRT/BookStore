@@ -7,72 +7,75 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.AccountPages
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IAccountService _accountService;
 
-        public EditModel(BusinessObject.BookStoreDBContext context)
+        public EditModel()
         {
-            _context = context;
+            _accountService = new AccountService();
         }
+
 
         [BindProperty]
         public Account Account { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int id)
         {
-            if (id == null || _context.Accounts == null)
+            var loginSession = HttpContext.Session.GetString("account");
+            if (loginSession == null)
+            {
+                TempData["ErrorLogin"] = "You need to login to access this page";
+                return RedirectToPage("../Login");
+            }
+            else if (!loginSession.Equals("customer") && !loginSession.Equals("seller"))
+            {
+                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                return RedirectToPage("../Error");
+            }
+            Account = _accountService.GetById(id);
+            if (Account == null)
             {
                 return NotFound();
             }
-
-            var account =  await _context.Accounts.FirstOrDefaultAsync(m => m.Id == id);
-            if (account == null)
-            {
-                return NotFound();
-            }
-            Account = account;
-           ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id");
-           ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Id");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
-            _context.Attach(Account).State = EntityState.Modified;
-
-            try
+            var chosenDate = Account.DateOfBirth!;
+            TimeSpan timeSpan = (TimeSpan)(DateTime.Now - chosenDate);
+            if (timeSpan.TotalDays < 10 * 365.25)
             {
-                await _context.SaveChangesAsync();
+                TempData["ErrorEditProfile"] = "You must be at least 10 years old to register";
+                return Page();
             }
-            catch (DbUpdateConcurrencyException)
+            // Kiểm tra password
+            var password = Account.Password;
+            if (string.IsNullOrWhiteSpace(password))
             {
-                if (!AccountExists(Account.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                TempData["ErrorEditProfile"] = "Password is required";
+                return Page();
             }
 
-            return RedirectToPage("./Index");
-        }
-
-        private bool AccountExists(int id)
-        {
-          return (_context.Accounts?.Any(e => e.Id == id)).GetValueOrDefault();
+            // Kiểm tra address
+            var address = Account.Address;
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                TempData["ErrorEditProfile"] = "Address is required";
+                return Page();
+            }
+            _accountService.Update(Account); 
+            return RedirectToPage("./Details", new { id = Account.Id });
         }
     }
 }

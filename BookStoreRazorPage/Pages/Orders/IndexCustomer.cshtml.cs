@@ -29,7 +29,7 @@ namespace BookStoreRazorPage.Pages.Orders
             {
                 if (role.Equals("customer"))
                 {
-                    Order = _service.GetOrderByCustomerID(id).OrderBy(o => o.CreateDate).ToList();
+                    Order = _service.GetOrderByCustomerID(id).OrderByDescending(o => o.CreateDate).ToList();
                     return Page();
                 }
             }return RedirectToPage("../Logout");

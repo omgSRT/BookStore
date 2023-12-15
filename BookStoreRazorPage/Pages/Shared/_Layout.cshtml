@@ -1,5 +1,6 @@
 ﻿@{
     var account = Context.Request.HttpContext.Session.GetString("account");
+    var userId = Context.Request.HttpContext.Session.GetInt32("accountId");
 }
 
 <!DOCTYPE html>
@@ -28,6 +29,10 @@
                 {
                     <a class="navbar-brand" asp-area="" asp-page="/AccountPages/Index">Book Store</a>
                 }
+                else if (account.Equals("customer"))
+                {
+                    <a class="navbar-brand" asp-area="" asp-page="/AccountPages/CustomerIndex">Book Store</a>
+                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -44,7 +49,11 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/BookInStorePages/Index">Manage Book In Store</a>
                             </li>
                             <li class="nav-item">
+<<<<<<< HEAD
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Orders/IndexSeller">Order</a>
+=======
+                                <a class="nav-link text-dark" asp-area="" asp-page="/AccountPages/Details" asp-route-id="@userId">Your Profile</a>
+>>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Logout</a>
@@ -60,6 +69,16 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/CategoryPages/Index">Manage Category</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Logout</a>
+                            </li>
+                        }
+                        else if (account.Equals("customer"))
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/AccountPages/Details" asp-route-id="@userId">Your Profile</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Logout</a>

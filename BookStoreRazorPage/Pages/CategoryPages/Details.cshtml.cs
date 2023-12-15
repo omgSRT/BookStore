@@ -21,7 +21,7 @@ namespace BookStoreRazorPage.Pages.CategoryPages
 
         public Category Category { get; set; } = default!;
 
-        public IActionResult OnGet(int? id)
+        public IActionResult OnGet(int id)
         {
             var loginSession = HttpContext.Session.GetString("account");
             if (loginSession == null)
@@ -39,14 +39,10 @@ namespace BookStoreRazorPage.Pages.CategoryPages
                 return NotFound();
             }
 
-            var category = _categoryService.GetById(id.Value);
-            if (category == null)
+            Category = _categoryService.GetById(id);
+            if (Category == null)
             {
                 return NotFound();
-            }
-            else
-            {
-                Category = category;
             }
             return Page();
         }

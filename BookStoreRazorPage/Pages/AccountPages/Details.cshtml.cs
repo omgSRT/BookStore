@@ -21,7 +21,7 @@ namespace BookStoreRazorPage.Pages.AccountPages
 
       public Account Account { get; set; } = default!; 
 
-        public IActionResult OnGetAsync(int? id)
+        public IActionResult OnGet(int id)
         {
             var loginSession = HttpContext.Session.GetString("account");
             if (loginSession == null)
@@ -34,20 +34,12 @@ namespace BookStoreRazorPage.Pages.AccountPages
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
-            if (id == null )
-            {
-                return NotFound();
-            }
 
-            var account = _accountService.GetById(id.Value);
-            if (account == null)
+            Account = _accountService.GetById(id);
+            if (Account == null)
             {
                 return NotFound();
-            }
-            else 
-            {
-                Account = account;
-            }
+            }       
             return Page();
         }
     }

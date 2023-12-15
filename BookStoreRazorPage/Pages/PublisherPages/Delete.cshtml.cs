@@ -85,7 +85,8 @@ namespace BookStoreRazorPage.Pages.PublisherPages
                     }
 
                     Publisher = publisher;
-                    _publisherService.Delete(Publisher);
+                    Publisher.IsActive = false;
+                    _publisherService.Update(Publisher);
 
                     TempData["ResultSuccess"] = "Delete Successfully";
                     return RedirectToPage("./Index");

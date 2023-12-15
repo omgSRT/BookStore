@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.StorePages
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IStoreService _storeService;
 
-        public DeleteModel(BusinessObject.BookStoreDBContext context)
+        public DeleteModel()
         {
-            _context = context;
+            _storeService = new StoreService();
         }
 
         [BindProperty]
@@ -23,40 +24,68 @@ namespace BookStoreRazorPage.Pages.StorePages
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Stores == null)
+            try
             {
-                return NotFound();
-            }
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    return RedirectToPage("../Login");
+                }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var store = await _context.Stores.FirstOrDefaultAsync(m => m.Id == id);
+                var store = _storeService.GetAll()
+                    .Where(x => x.Id == (int)id).FirstOrDefault();
 
-            if (store == null)
-            {
-                return NotFound();
+                if (store == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Store = store;
+                }
+                return Page();
             }
-            else 
+            catch (Exception ex)
             {
-                Store = store;
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Stores == null)
+            try
             {
-                return NotFound();
-            }
-            var store = await _context.Stores.FindAsync(id);
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            if (store != null)
+                var store = _storeService.GetById((int)id);
+
+                if (store != null)
+                {
+                    _storeService.Delete(store);
+
+                    TempData["ResultSuccess"] = "Delete Successfully";
+                    return RedirectToPage("./Index");
+                }
+
+                TempData["ResultFailed"] = "Error Occurred. Cannot Delete";
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
             {
-                Store = store;
-                _context.Stores.Remove(Store);
-                await _context.SaveChangesAsync();
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
             }
-
-            return RedirectToPage("./Index");
         }
     }
 }

@@ -219,8 +219,11 @@ namespace DataAccessObject
                     _context.Update(orderDetail);
                     _context.SaveChanges();
                 }
+<<<<<<< HEAD
                     
 
+=======
+>>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
             }
             catch (Exception ex)
             {
@@ -285,7 +288,10 @@ namespace DataAccessObject
                     .Include("Staff")
                     .ToList();
                 }
+<<<<<<< HEAD
                     
+=======
+>>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
             }
             catch(Exception ex)
             {
@@ -305,7 +311,10 @@ namespace DataAccessObject
                     .Include("Order")
                     .ToList();
                 }
+<<<<<<< HEAD
                     
+=======
+>>>>>>> 8d518a2617c000c8c38bb58b483927f448a3714c
             }
             catch (Exception ex)
             {

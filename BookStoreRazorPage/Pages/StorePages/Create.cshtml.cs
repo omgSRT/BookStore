@@ -6,21 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObject;
+using Service;
 
 namespace BookStoreRazorPage.Pages.StorePages
 {
     public class CreateModel : PageModel
     {
-        private readonly BusinessObject.BookStoreDBContext _context;
+        private readonly IStoreService _storeService;
 
-        public CreateModel(BusinessObject.BookStoreDBContext context)
+        public CreateModel()
         {
-            _context = context;
+            _storeService = new StoreService();
         }
 
         public IActionResult OnGet()
         {
-            return Page();
+            try
+            {
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    return RedirectToPage("../Login");
+                }
+                else if (!loginSession.Equals("admin"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
+            }
         }
 
         [BindProperty]
@@ -30,15 +51,31 @@ namespace BookStoreRazorPage.Pages.StorePages
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Stores == null || Store == null)
+            try
             {
-                return Page();
+                if (ModelState.IsValid)
+                {
+                    if (Store.Name.Trim().Equals(string.Empty))
+                    {
+                        TempData["Error"] = "Store Name cannot be null";
+                        return Page();
+                    }
+
+                    _storeService.Add(Store);
+
+                    TempData["ResultSuccess"] = "Update Successfully";
+                    return RedirectToPage("./Index");
+                }
+
+                TempData["ResultFailed"] = "Error occurred while adding. Cannot add";
+                return RedirectToPage("./Index");
             }
-
-            _context.Stores.Add(Store);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
+                return RedirectToPage("../Error");
+            }
         }
     }
 }

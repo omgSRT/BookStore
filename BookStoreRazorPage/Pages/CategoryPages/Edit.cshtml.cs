@@ -14,16 +14,19 @@ namespace BookStoreRazorPage.Pages.CategoryPages
     public class EditModel : PageModel
     {
         private readonly ICategoryService _categoryService;
-
-        public EditModel(ICategoryService categoryService)
+        private readonly IOrderService _orderService;
+        private readonly IBookService _bookService;
+        public EditModel(ICategoryService categoryService, IOrderService orderService, IBookService bookService)
         {
             _categoryService = categoryService;
+            _orderService = orderService;
+            _bookService = bookService;
         }
 
         [BindProperty]
         public Category Category { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int id)
         {
             var loginSession = HttpContext.Session.GetString("account");
             if (loginSession == null)
@@ -36,12 +39,8 @@ namespace BookStoreRazorPage.Pages.CategoryPages
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var category = _categoryService.GetById(id.Value);
+            var category = _categoryService.GetById(id);
 
             if (category == null)
             {
@@ -52,7 +51,7 @@ namespace BookStoreRazorPage.Pages.CategoryPages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +60,39 @@ namespace BookStoreRazorPage.Pages.CategoryPages
 
             try
             {
+                var name = Category.Name;
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    TempData["ErrorEditCategory"] = "name is required";
+                    return Page();
+                }
+                var description = Category.Description;
+                if (string.IsNullOrWhiteSpace(description))
+                {
+                    TempData["ErrorEditCategory"] = "description is required";
+                    return Page();
+                }
+                if (Category.IsActive == false)
+                {
+                    var bookList = _bookService.GetAll().Where(x => x.CategoryId == Category.Id);
+                    foreach (var book in bookList)
+                    {
+                        var bookListSell = _orderService.GetAllOrderDetails().Where(x => x.BookId == book.Id);
+                        if (bookListSell.Any())
+                        {
+                            TempData["ErrorEditCategory"] = "Cannot deactivate category. Books of this category are associated with orders.";
+                            return Page();
+                        }
+                    }
+                    foreach (var book in bookList)
+                    {
+                        book.IsActive = false;
+                        _bookService.Update(book);
+                    }
+                }
                 _categoryService.Update(Category);
+
+
             }
             catch (DbUpdateConcurrencyException)
             {
