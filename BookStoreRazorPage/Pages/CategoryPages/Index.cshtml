@@ -5,11 +5,31 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
+<h1>Category</h1>
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+@if (TempData["ResultFailed"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ResultFailed"]
+    </div>
+    TempData.Clear();
+}
+@if (TempData["ResultSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ResultSuccess"]
+    </div>
+    TempData.Clear();
+}
+<div>
+    <form method="post">
+        <input type="text" asp-for="SearchValue" class="" style="height: 38px;" />
+        <input type="submit" value="Search" class="btn btn-secondary mb-1" />
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -53,3 +73,14 @@
 }
     </tbody>
 </table>
+
+<div class="align-middle">
+    <ul class="pagination">
+        @for (int b = 1; b <= Model.totalPages; b++)
+        {
+            <li class="page-item @(b == Model.curentPage ? "active" : "")">
+                <a asp-page="./Index" asp-route-curentPage="@b" class="page-link">@b</a>
+            </li>
+        }
+    </ul>
+</div>

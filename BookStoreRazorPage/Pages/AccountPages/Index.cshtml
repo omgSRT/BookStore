@@ -5,11 +5,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Account</h1>
 
 <form id="searchForm" method="post">
-    <input type="text" id="searchInput" name="search" placeholder="Search by name" />
-    <button type="submit">Search</button>
+    <input type="text" id="searchInput" name="search" placeholder="Search by name" style="height: 38px;" />
+    <button type="submit" class="btn btn-secondary mb-1">Search</button>
 </form>
 
 
@@ -81,7 +81,7 @@
                 </td>
 
                 <td>
-                    <button type="submit" id="submitButton-@item.Id" style="display:none;">SAVE</button>
+                    <button type="submit" id="submitButton-@item.Id" style="display:none;" class="btn btn-primary">SAVE</button>
                 </td>
             </tr>
 
@@ -106,7 +106,16 @@
     </tbody>
 
 </table>
-
+<div class="align-middle">
+    <ul class="pagination">
+        @for (int b = 1; b <= Model.totalPages; b++)
+        {
+            <li class="page-item @(b == Model.curentPage ? "active" : "")">
+                <a asp-page="./Index" asp-route-curentPage="@b" class="page-link">@b</a>
+            </li>
+        }
+    </ul>
+</div>
 
 
 <script>

@@ -23,6 +23,11 @@ namespace BookStoreRazorPage.Pages.AccountPages
             _roleService = roleService;
             _storeService = storeService;
         }
+        [BindProperty(SupportsGet = true)]
+        public int curentPage { get; set; } = 1;
+        public int pageSize { get; set; } = 5;
+        public int count { get; set; }
+        public int totalPages => (int)Math.Ceiling(Decimal.Divide(count, pageSize));
 
         public SelectList RolesSelectList { get; set; }
 
@@ -48,11 +53,15 @@ namespace BookStoreRazorPage.Pages.AccountPages
 
             if (string.IsNullOrEmpty(searchKeyword))
             {
-                Account = _accountService.GetAllWithIncludeRoleAndStore();
+                count = _accountService.GetAllWithIncludeRoleAndStore().Count();
+                Account = _accountService.GetAllWithIncludeRoleAndStore().Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList(); ;
             }
             else
             {
-                Account = _accountService.GetByName(searchKeyword);
+                count = _accountService.GetByName(searchKeyword).Count();
+                Account = _accountService.GetByName(searchKeyword).Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
             }
         }
 
@@ -69,13 +78,6 @@ namespace BookStoreRazorPage.Pages.AccountPages
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
-            //Account = _accountService.GetAllWithIncludeRoleAndStore();
-            //var roles = _roleService.GetAll(); 
-            //RolesSelectList = new SelectList(roles, "Id", "Name");
-
-            //var stores = _storeService.GetAll();
-
-            //StoresSelectList = new SelectList(stores, "Id", "Name");
             UpdatePageData();
 
             return Page();

@@ -19,24 +19,82 @@ namespace BookStoreRazorPage.Pages.CategoryPages
             _categoryService = categoryService;         
         }
 
+        [BindProperty]
+        public string SearchValue { get; set; } = default!;
+
+        [BindProperty(SupportsGet = true)]
+        public int curentPage { get; set; } = 1;
+        public int pageSize { get; set; } = 5;
+        public int count { get; set; }
+        public int totalPages => (int)Math.Ceiling(Decimal.Divide(count, pageSize));
+
         public IList<Category> Category { get;set; } = default!;
 
         public IActionResult OnGet()
         {
-            var loginSession = HttpContext.Session.GetString("account");
-            if (loginSession == null)
+            try
             {
-                TempData["ErrorLogin"] = "You need to login to access this page";
-                return RedirectToPage("../Login");
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    return RedirectToPage("../Login");
+                }
+                else if (!loginSession.Equals("admin"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+                count = _categoryService.GetAll().Count();
+                Category = _categoryService.GetAll().Skip((curentPage - 1) * pageSize).Take(pageSize)
+                        .ToList(); ;
+                return Page();
             }
-            else if (!loginSession.Equals("admin"))
+            catch (Exception ex)
             {
-                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
                 return RedirectToPage("../Error");
             }
-            Category = _categoryService.GetAll();
-            return Page();
-            
+        }
+
+        public IActionResult OnPost()
+        {
+            if (SearchValue is null)
+            {
+                count = _categoryService.GetAll().Count();
+                Category = _categoryService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
+            }
+            else if (SearchValue.Trim().Length == 0)
+            {
+                count = _categoryService.GetAll().Count();
+                Category = _categoryService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
+            }
+            else
+            {
+                count = _categoryService.GetAll()
+                    .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
+                    .Count();
+                Category = _categoryService.GetAll()
+                    .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                if (Category.Count == 0)
+                {
+                    TempData["ResultFailed"] = "There's no result matched " + SearchValue;
+                    count = _categoryService.GetAll().Count();
+                    Category = _categoryService.GetAll()
+                        .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                        .ToList();
+                }
+                return Page();
+            }
         }
     }
 }
