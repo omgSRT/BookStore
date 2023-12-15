@@ -22,7 +22,7 @@ namespace BookStoreRazorPage.Pages.BookPages
         [BindProperty]
       public Book Book { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace BookStoreRazorPage.Pages.BookPages
                 return RedirectToPage("../Error");
             } 
         }
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPost(int? id)
         {
             try
             {

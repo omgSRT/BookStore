@@ -21,17 +21,28 @@ namespace BookStoreRazorPage.Pages.StorePages
 
       public Store Store { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             try
             {
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    return RedirectToPage("../Login");
+                }
+                else if (!loginSession.Equals("admin"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+
                 if (id == null)
                 {
                     return NotFound();
                 }
 
-                var store = _storeService.GetAll()
-                    .Where(x => x.Id == (int)id).FirstOrDefault();
+                var store = _storeService.GetById((int)id);
                 if (store == null)
                 {
                     return NotFound();

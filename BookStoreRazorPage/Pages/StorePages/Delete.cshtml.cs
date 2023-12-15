@@ -22,7 +22,7 @@ namespace BookStoreRazorPage.Pages.StorePages
         [BindProperty]
       public Store Store { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             try
             {
@@ -32,13 +32,18 @@ namespace BookStoreRazorPage.Pages.StorePages
                     TempData["ErrorLogin"] = "You need to login to access this page";
                     return RedirectToPage("../Login");
                 }
+                else if (!loginSession.Equals("admin"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+
                 if (id == null)
                 {
                     return NotFound();
                 }
 
-                var store = _storeService.GetAll()
-                    .Where(x => x.Id == (int)id).FirstOrDefault();
+                var store = _storeService.GetById((int)id);
 
                 if (store == null)
                 {
@@ -58,7 +63,7 @@ namespace BookStoreRazorPage.Pages.StorePages
             }
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPost(int? id)
         {
             try
             {
@@ -66,12 +71,12 @@ namespace BookStoreRazorPage.Pages.StorePages
                 {
                     return NotFound();
                 }
-
                 var store = _storeService.GetById((int)id);
 
                 if (store != null)
                 {
-                    _storeService.Delete(store);
+                   
+                    _storeService.Delete(Store);
 
                     TempData["ResultSuccess"] = "Delete Successfully";
                     return RedirectToPage("./Index");

@@ -10,6 +10,20 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+@if (TempData["ResultFailed"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ResultFailed"]
+    </div>
+    TempData.Clear();
+}
+@if (TempData["ResultSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ResultSuccess"]
+    </div>
+    TempData.Clear();
+}
 <div>
     <form method="post">
         <input type="text" asp-for="SearchValue" class="" style="height: 38px;" />
@@ -41,19 +55,16 @@
                 @Html.DisplayNameFor(model => model.Book[0].Amount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Book[0].Avatar)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Book[0].Price)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Book[0].Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Book[0].Category)
+                @Html.DisplayNameFor(model => model.Book[0].CategoryId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Book[0].Publisher)
+                @Html.DisplayNameFor(model => model.Book[0].PublisherId)
             </th>
             <th></th>
         </tr>
@@ -83,19 +94,16 @@
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Avatar)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.Id)
+                @Html.DisplayFor(modelItem => item.CategoryId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Publisher.Name)
+                @Html.DisplayFor(modelItem => item.PublisherId)
             </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

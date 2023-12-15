@@ -23,46 +23,34 @@ namespace BookStoreRazorPage.Pages.BookPages
         [BindProperty]
         public Book Book { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
-            try
+            var loginSession = HttpContext.Session.GetString("account");
+            if (loginSession == null)
             {
-                var loginSession = HttpContext.Session.GetString("account");
-                if (loginSession == null)
-                {
-                    TempData["ErrorLogin"] = "You need to login to access";
-                    return RedirectToPage("../Login");
-                }
-                else if (!loginSession.Equals("seller"))
-                {
-                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
-                    return RedirectToPage("../Error");
-                }
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var book = _bookService.GetById((int)id);
-                if (book == null)
-                {
-                    return NotFound();
-                }
-                Book = book;
-                ViewData["BookId"] = new SelectList(_bookService.GetAll(), "Id", "Name");
-                return Page();
+                TempData["ErrorLogin"] = "You need to login to access this page";
+                return RedirectToPage("../Login");
             }
-            catch (Exception ex)
+            else if (!loginSession.Equals("admin"))
             {
-                TempData["Error"] = "Error Occurred. Please contact admin";
-                Console.WriteLine(ex.ToString());
+                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
+
+            var book = _bookService.GetById((int)id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            Book = book;
+            return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             try
             {
