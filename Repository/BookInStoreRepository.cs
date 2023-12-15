@@ -38,5 +38,10 @@ namespace Repository
         {
             return BookInStoreDAO.SingletonInstance.GetAllWithIncludeBookAndStore();
         }
+
+        public IList<BookInStore> GetByStoreId(int id)
+        {
+            return BookInStoreDAO.SingletonInstance.GetByStoreId(id);
+        }
     }
 }

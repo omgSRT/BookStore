@@ -15,5 +15,6 @@ namespace Repository
         IList<BookInStore> GetAll();
         BookInStore? GetById(int id);
         IList<BookInStore> GetAllWithIncludeBookAndStore();
+        IList<BookInStore> GetByStoreId(int id);
     }
 }
