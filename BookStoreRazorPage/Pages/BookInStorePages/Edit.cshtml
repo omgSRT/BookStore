@@ -13,6 +13,13 @@
 
 <h4>BookInStore</h4>
 <hr />
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+    TempData.Clear();
+}
 <div class="row">
     <div class="col-md-4">
         <form method="post">

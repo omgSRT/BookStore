@@ -71,8 +71,21 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                 if (ModelState.IsValid)
                 {
                     var updateBookInStore = _bookInStoreService.GetById(BookInStore.Id);
+
+                    var book = _bookService.GetById((int)BookInStore.BookId!);
+                    if (BookInStore.Amount > book.Amount)
+                    {
+                        ViewData["BookId"] = new SelectList(_bookService.GetAll(), "Id", "Name");
+
+                        TempData["Error"] = "There is/are only " + book.Amount + " books left";
+                        return Page();
+                    }
+
                     updateBookInStore!.Amount = BookInStore.Amount;
                     _bookInStoreService.Update(updateBookInStore!);
+                    var importAmount = book.Amount - BookInStore.Amount;
+                    book.Amount = importAmount;
+                    _bookService.Update(book);
 
                     TempData["ResultSuccess"] = "Update Successfully";
                     return RedirectToPage("./Index");

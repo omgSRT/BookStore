@@ -90,8 +90,26 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                         TempData["Error"] = "Please select books to add";
                         return Page();
                     }
+                    var book = _bookService.GetById((int)BookInStore.BookId!);
+                    if(BookInStore.Amount > book.Amount)
+                    {
+                        List<int?> excludedBookIds = _bookInStoreService.GetAll()
+                            .Where(bis => bis.BookId.HasValue)
+                            .Select(bis => bis.BookId)
+                            .ToList();
+                        List<Book> filteredBookList = _bookService.GetAll()
+                                .Where(book => !excludedBookIds.Contains(book.Id))
+                                .ToList();
+                        ViewData["BookId"] = new SelectList(filteredBookList, "Id", "Name");
+
+                        TempData["Error"] = "There is/are only " +book.Amount+ " books left";
+                        return Page();
+                    }
 
                     _bookInStoreService.Add(BookInStore);
+                    var importAmount = book.Amount - BookInStore.Amount;
+                    book.Amount = importAmount;
+                    _bookService.Update(book);
 
                     TempData["ResultSuccess"] = "Create Successfully";
                     return RedirectToPage("./Index");
