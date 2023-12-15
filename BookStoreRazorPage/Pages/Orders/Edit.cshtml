@@ -87,13 +87,13 @@
     if (HttpContext.Session.GetString("account").Equals("seller"))
     {
         <div>
-            <a asp-page="../Orders/IndexSeller">Back to List</a>
+            <a asp-page="../Orders/IndexSeller" class="btn btn-secondary ml-2">Back to List</a>
         </div>
     }
-    else if (HttpContext.Session.GetString("account").Equals("seller"))
+    else if (HttpContext.Session.GetString("account").Equals("customer"))
     {
         <div>
-            <a asp-page="../Orders/IndexCustomer">Back to List</a>
+            <a asp-page="../Orders/IndexCustomer" class="btn btn-secondary ml-2">Back to List</a>
         </div>
     }
 }
