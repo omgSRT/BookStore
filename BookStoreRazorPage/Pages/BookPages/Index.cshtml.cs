@@ -40,19 +40,32 @@ namespace BookStoreRazorPage.Pages.BookPages
 
         public IActionResult OnGet()
         {
-            var loginSession = HttpContext.Session.GetString("account");
-            if (loginSession == null)
+            try
             {
-                TempData["ErrorLogin"] = "You need to login to access this page";
-                return RedirectToPage("../Login");
+                var loginSession = HttpContext.Session.GetString("account");
+                if (loginSession == null)
+                {
+                    TempData["ErrorLogin"] = "You need to login to access this page";
+                    return RedirectToPage("../Login");
+                }
+                else if (!loginSession.Equals("admin"))
+                {
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
+                }
+
+                count = _bookService.GetAll().Count();
+                Book = _bookService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+                return Page();
             }
-            else if (!loginSession.Equals("admin"))
+            catch (Exception ex)
             {
-                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                TempData["Error"] = "Error Occurred. Please contact admin";
+                Console.WriteLine(ex.ToString());
                 return RedirectToPage("../Error");
             }
-
-            return Page();
         }
 
         public IActionResult OnPost()

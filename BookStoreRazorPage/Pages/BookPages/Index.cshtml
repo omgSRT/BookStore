@@ -76,8 +76,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Version)
             </td>
+            <td>
                @Html.DisplayFor(modelItem => item.IsActive)
-              
+              </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
@@ -104,10 +105,8 @@
                         <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
                     }
                 </td>
-
         </tr>
        }
-}
     </tbody>
 </table>
 

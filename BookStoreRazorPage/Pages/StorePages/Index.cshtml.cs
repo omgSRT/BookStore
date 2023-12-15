@@ -35,20 +35,21 @@ namespace BookStoreRazorPage.Pages.StorePages
             try
             {
                 var loginSession = HttpContext.Session.GetString("account");
-                var id = HttpContext.Session.GetInt32("accountId");
                 if (loginSession == null)
                 {
                     TempData["ErrorLogin"] = "You need to login to access this page";
                     return RedirectToPage("../Login");
                 }
-
-                var account = _accountService.GetById((int)id);
-
-                var list = _storeService.GetAll();
-                if (list != null)
+                else if (!loginSession.Equals("admin"))
                 {
-                    Store = list;
+                    TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                    return RedirectToPage("../Error");
                 }
+
+                count = _storeService.GetAll().Count();
+                Store = _storeService.GetAll()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
                 return Page();
             }
             catch (Exception ex)
