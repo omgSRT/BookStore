@@ -54,7 +54,7 @@ namespace BusinessObject
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
-                entity.Property(e => e.Avatar).HasColumnType("ntext");
+                entity.Property(e => e.Avatar).HasColumnType("VARCHAR(MAX)");
 
                 entity.Property(e => e.DateOfBirth).HasColumnType("date");
 

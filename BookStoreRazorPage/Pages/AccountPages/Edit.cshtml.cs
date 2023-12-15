@@ -24,6 +24,9 @@ namespace BookStoreRazorPage.Pages.AccountPages
         [BindProperty]
         public Account Account { get; set; } = default!;
 
+        [BindProperty]
+        public IFormFile AvatarFile { get; set; }
+
         public IActionResult OnGet(int id)
         {
             var loginSession = HttpContext.Session.GetString("account");
@@ -48,10 +51,6 @@ namespace BookStoreRazorPage.Pages.AccountPages
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
             var chosenDate = Account.DateOfBirth!;
             TimeSpan timeSpan = (TimeSpan)(DateTime.Now - chosenDate);
             if (timeSpan.TotalDays < 10 * 365.25)
@@ -74,6 +73,17 @@ namespace BookStoreRazorPage.Pages.AccountPages
                 TempData["ErrorEditProfile"] = "Address is required";
                 return Page();
             }
+
+            if (AvatarFile != null && AvatarFile.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    AvatarFile.CopyTo(memoryStream);
+                    Account.Avatar = Convert.ToBase64String(memoryStream.ToArray());
+                }
+            }
+
+
             _accountService.Update(Account); 
             return RedirectToPage("./Details", new { id = Account.Id });
         }
