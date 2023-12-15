@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
 using Repository;
+using Service;
 
 namespace BookStoreRazorPage.Pages.BookInStorePages
 {
     public class DetailsModel : PageModel
     {
-        private readonly IBookInStoreRepository _bookInStoreRepository;
+        private readonly IBookInStoreService _bookInStoreService;
 
         public DetailsModel()
         {
-            _bookInStoreRepository = new BookInStoreRepository();
+            _bookInStoreService = new BookInStoreService();
         }
 
       public BookInStore BookInStore { get; set; } = default!; 
@@ -30,7 +31,7 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                     return NotFound();
                 }
 
-                var bookinstore = _bookInStoreRepository.GetAllWithIncludeBookAndStore()
+                var bookinstore = _bookInStoreService.GetAllWithIncludeBookAndStore()
                     .Where(x => x.Id == (int)id).FirstOrDefault();
                 if (bookinstore == null)
                 {

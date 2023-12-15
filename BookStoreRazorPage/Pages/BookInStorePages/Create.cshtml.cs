@@ -9,20 +9,21 @@ using BusinessObject;
 using Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Service;
 
 namespace BookStoreRazorPage.Pages.BookInStorePages
 {
     public class CreateModel : PageModel
     {
-        private readonly IBookInStoreRepository _bookInStoreRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly IAccountRepository _accountRepository;
+        private readonly IBookInStoreService _bookInStoreService;
+        private readonly IBookService _bookService;
+        private readonly IAccountService _accountService;
 
         public CreateModel()
         {
-            _bookInStoreRepository = new BookInStoreRepository();
-            _bookRepository = new BookRepository();
-            _accountRepository = new AccountRepository();
+            _bookInStoreService = new BookInStoreService();
+            _bookService = new BookService();
+            _accountService = new AccountService();
         }
 
         [BindProperty]
@@ -46,12 +47,12 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                 else
                 {
                     var id = HttpContext.Session.GetInt32("accountId");
-                    var account = _accountRepository.GetById((int)id);
-                    List<int?> excludedBookIds = _bookInStoreRepository.GetAll()
+                    var account = _accountService.GetById((int)id);
+                    List<int?> excludedBookIds = _bookInStoreService.GetAll()
                         .Where(bis => bis.BookId.HasValue)
                         .Select(bis => bis.BookId)
                         .ToList();
-                    List<Book> filteredBookList = _bookRepository.GetAll()
+                    List<Book> filteredBookList = _bookService.GetAll()
                             .Where(book => !excludedBookIds.Contains(book.Id))
                             .ToList();
                     ViewData["BookId"] = new SelectList(filteredBookList, "Id", "Name");
@@ -73,15 +74,15 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
             {
                 if (ModelState.IsValid)
                 {
-                    if(BookInStore.Id == 0)
+                    if(BookInStore.BookId == 0)
                     {
                         var id = HttpContext.Session.GetInt32("accountId");
-                        var account = _accountRepository.GetById((int)id);
-                        List<int?> excludedBookIds = _bookInStoreRepository.GetAll()
+                        var account = _accountService.GetById((int)id);
+                        List<int?> excludedBookIds = _bookInStoreService.GetAll()
                             .Where(bis => bis.BookId.HasValue)
                             .Select(bis => bis.BookId)
                             .ToList();
-                        List<Book> filteredBookList = _bookRepository.GetAll()
+                        List<Book> filteredBookList = _bookService.GetAll()
                                 .Where(book => !excludedBookIds.Contains(book.Id))
                                 .ToList();
                         ViewData["BookId"] = new SelectList(filteredBookList, "Id", "Name");
@@ -90,7 +91,7 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                         return Page();
                     }
 
-                    _bookInStoreRepository.Add(BookInStore);
+                    _bookInStoreService.Add(BookInStore);
 
                     TempData["ResultSuccess"] = "Create Successfully";
                     return RedirectToPage("./Index");
