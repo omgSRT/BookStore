@@ -15,5 +15,6 @@ namespace Service
         IList<Book> GetAll();
         Book? GetById(int id);
         IList<Book> GetAllWithIncludeCategoryAndPublisher();
+        List<Book> GetByName(string name);
     }
 }

@@ -38,5 +38,10 @@ namespace Repository
         {
             return BookDAO.SingletonInstance.GetAllWithIncludeCategoryAndPublisher();
         }
+
+        public List<Book> GetByName(string name)
+        {
+            return BookDAO.SingletonInstance.GetByName(name);
+        }
     }
 }

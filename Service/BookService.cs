@@ -44,5 +44,10 @@ namespace Service
         {
             return _repository.GetAllWithIncludeCategoryAndPublisher();
         }
+
+        public List<Book> GetByName(string name)
+        {
+            return _repository.GetByName(name);
+        }
     }
 }

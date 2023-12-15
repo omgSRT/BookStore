@@ -140,5 +140,20 @@ namespace DataAccessObject
                 return new List<Book>();
             }
         }
+        public List<Book> GetByName(string name)
+        {
+            try
+            {
+                using (var _context = new BookStoreDBContext())
+                {
+                    return _context.Books.Where(p => p.Name.Contains(name)).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

@@ -7,49 +7,101 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
 using Service;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStoreRazorPage.Pages.BookPages
 {
     public class IndexModel : PageModel
     {
         private readonly IBookService _bookService;
-        private readonly IAccountService _accountService;
-
-        public IndexModel()
+        public IndexModel( IBookService bookService)
         {
-            _bookService = new BookService();
-            _accountService = new AccountService();
+            _bookService = bookService;
         }
+        [BindProperty(SupportsGet = true)]
+        public int curentPage { get; set; } = 1;
+        public int pageSize { get; set; } = 5;
+        public int count { get; set; }
+        public int totalPages => (int)Math.Ceiling(Decimal.Divide(count, pageSize));
 
-        public IList<Book> Book { get;set; } = default!;
+        public SelectList BookSelectList { get; set; }
+
+        public IList<Book> Book { get; set; } = default!;
+
+        public List<SelectListItem> IsActiveOptions { get; set; } = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "true", Text = "Active" },
+            new SelectListItem { Value = "false", Text = "Inactive"}
+        };
+
+        private void UpdatePageData(string searchKeyword = null)
+        {
+            var books = _bookService.GetAll();
+            BookSelectList = new SelectList(books, "Id", "Name");
+
+            if (string.IsNullOrEmpty(searchKeyword))
+            {
+                count = _bookService.GetAllWithIncludeCategoryAndPublisher().Count();
+                Book = _bookService.GetAllWithIncludeCategoryAndPublisher().Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList(); ;
+            }
+            else
+            {
+                count = _bookService.GetByName(searchKeyword).Count();
+                Book = _bookService.GetByName(searchKeyword).Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .ToList();
+            }
+        }
 
         public IActionResult OnGet()
         {
-            try
+            var loginSession = HttpContext.Session.GetString("account");
+            if (loginSession == null)
             {
-                var loginSession = HttpContext.Session.GetString("account");
-                var id = HttpContext.Session.GetInt32("accountId");
-                if (loginSession == null)
-                {
-                    TempData["ErrorLogin"] = "You need to login to access this page";
-                    return RedirectToPage("../Login");
-                }
-
-                var account = _accountService.GetById((int)id);
-
-                var list = _bookService.GetAll();
-                if (list != null)
-                {
-                    Book = list;
-                }
-                return Page();
+                TempData["ErrorLogin"] = "You need to login to access this page";
+                return RedirectToPage("../Login");
             }
-            catch (Exception ex)
+            else if (!loginSession.Equals("admin"))
             {
-                TempData["Error"] = "Error Occurred. Please contact admin";
-                Console.WriteLine(ex.ToString());
+                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");
             }
+            UpdatePageData();
+
+            return Page();
+        }
+
+
+        public IActionResult OnPostEditAccount(int id)
+        {
+            var isActive = HttpContext.Request.Form["IsActive"];
+            var storeId = int.Parse(HttpContext.Request.Form["StoreId"]);
+            var bookToUpdate = _bookService.GetById(id);
+            bookToUpdate.IsActive = isActive == "true" ? true : false;
+            _bookService.Update(bookToUpdate);
+            HttpContext.Session.SetString("UpdateSuccessMessage", "Account updated successfully!");
+
+            return RedirectToPage("./Index");
+        }
+        public IActionResult OnPost()
+        {
+
+
+            var loginSession = HttpContext.Session.GetString("account");
+            if (loginSession == null)
+            {
+                TempData["ErrorLogin"] = "You need to login to access this page";
+                return RedirectToPage("../Login");
+            }
+            else if (!loginSession.Equals("admin"))
+            {
+                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+                return RedirectToPage("../Error");
+            }
+
+            string searchKeyword = Request.Form["search"];
+            UpdatePageData(searchKeyword);
+            return Page();
         }
     }
 }
