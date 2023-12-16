@@ -35,7 +35,7 @@ namespace BookStoreRazorPage.Pages.BookPages
                 TempData["ErrorLogin"] = "You need to login to access this page";
                 return RedirectToPage("../Login");
             }
-            else if (!loginSession.Equals("admin"))
+            else if (!loginSession.Equals("admin")|| !loginSession.Equals("seller"))
             {
                 TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                 return RedirectToPage("../Error");

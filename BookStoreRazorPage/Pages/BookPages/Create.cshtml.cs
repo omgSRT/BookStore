@@ -33,7 +33,7 @@ namespace BookStoreRazorPage.Pages.BookPages
                     TempData["ErrorLogin"] = "You need to login to access";
                     return RedirectToPage("../Login");
                 }
-                else if (!loginSession.Equals("seller"))
+                else if (!loginSession.Equals("admin"))
                 {
                     TempData["ErrorAuthorize"] = "You don't have permission to access this page";
                     return RedirectToPage("../Error");
@@ -68,6 +68,17 @@ namespace BookStoreRazorPage.Pages.BookPages
                     {
                         TempData["Error"] = "Book Name cannot be null";
                         return Page();
+                    }
+                    var priceBook = Book.Price;
+                    if (priceBook == null)
+                    {
+                        TempData["ResultFailed"] = "Please input price";
+                        return RedirectToPage("./Index");
+                    }
+                    if (priceBook <= 0)
+                    {
+                        TempData["ResultFailed"] = "Price must be more than 0";
+                        return RedirectToPage("./Index");
                     }
 
                     _bookService.Add(Book);
