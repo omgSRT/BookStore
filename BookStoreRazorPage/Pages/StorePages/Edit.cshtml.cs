@@ -15,9 +15,9 @@ namespace BookStoreRazorPage.Pages.StorePages
     {
         private readonly IStoreService _storeService;
 
-        public EditModel()
+        public EditModel(StoreService storeService)
         {
-            _storeService = new StoreService();
+            _storeService = storeService;
         }
 
         [BindProperty]

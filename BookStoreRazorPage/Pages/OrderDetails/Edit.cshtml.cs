@@ -61,7 +61,8 @@ namespace BookStoreRazorPage.Pages.OrderDetails
                     return Page();
                 }
                 _orderService.UpdateOrderDetail(OrderDetail);
-                var updateBookInStore = _bookInStoreService.GetById((int)OrderDetail.BookInStoreId);
+                int BISId = (int)OrderDetail.BookInStoreId;
+                var updateBookInStore = _bookInStoreService.GetById(BISId);
                 updateBookInStore.Amount += (currentQuantity - OrderDetail.Quantity);
                 _bookInStoreService.Update(updateBookInStore);
 

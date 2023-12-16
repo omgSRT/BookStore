@@ -14,9 +14,9 @@ namespace BookStoreRazorPage.Pages.PublisherPages
     {
         private readonly IPublisherService _publisherService;
 
-        public CreateModel()
+        public CreateModel(PublisherService publisherService)
         {
-            _publisherService = new PublisherService();
+            _publisherService = publisherService;
         }
 
         public IActionResult OnGet()

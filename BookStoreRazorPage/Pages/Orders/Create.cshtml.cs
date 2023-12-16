@@ -20,12 +20,12 @@ namespace BookStoreRazorPage.Pages.Orders
         private readonly IOrderService _orderService;
 
 
-        public CreateModel()
+        public CreateModel(BookInStoreService bookInStoreService, AccountService accountService, BookService bookService, OrderService orderService)
         {
-            _bookInStoreService = new BookInStoreService();
-            _accountService = new AccountService();
-            _bookService = new BookService();
-            _orderService = new OrderService();
+            _bookInStoreService = bookInStoreService;
+            _accountService = accountService;
+            _bookService = bookService;
+            _orderService = orderService;
         }
 
         public IList<BookInStore> BookInStore { get;set; } = default!;

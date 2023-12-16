@@ -15,10 +15,10 @@ namespace BookStoreRazorPage.Pages.PublisherPages
         private readonly IPublisherService _publisherService;
         private readonly IBookService _bookService;
 
-        public DeleteModel()
+        public DeleteModel(PublisherService publisherService, BookService bookService)
         {
-            _publisherService = new PublisherService();
-            _bookService = new BookService();
+            _publisherService = publisherService;
+            _bookService = bookService;
         }
 
         [BindProperty]

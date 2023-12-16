@@ -15,10 +15,10 @@ namespace BookStoreRazorPage.Pages.StorePages
         private readonly IStoreService _storeService;
         private readonly IAccountService _accountService;
 
-        public IndexModel()
+        public IndexModel(StoreService storeService, AccountService accountService)
         {
-            _storeService = new StoreService();
-            _accountService = new AccountService();
+            _storeService = storeService;
+            _accountService = accountService;
         }
 
         public IList<Store> Store { get;set; } = default!;
