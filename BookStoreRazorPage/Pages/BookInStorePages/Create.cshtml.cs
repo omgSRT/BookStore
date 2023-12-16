@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObject;
-using Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Service;
@@ -28,6 +27,8 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
 
         [BindProperty]
         public BookInStore BookInStore { get; set; } = default!;
+        [BindProperty]
+        public int StoreId { get; set; }
 
         public IActionResult OnGet()
         {
@@ -56,6 +57,8 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                             .Where(book => !excludedBookIds.Contains(book.Id))
                             .ToList();
                     ViewData["BookId"] = new SelectList(filteredBookList, "Id", "Name");
+
+                    StoreId = (int)account.StoreId;
                 }
                 return Page();
             }

@@ -1,4 +1,5 @@
 using BusinessObject;
+using Repository;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,11 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
-//add to not build project failed
-//must delete after finish all pages
-builder.Services.AddDbContext<BookStoreDBContext>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IBookInStoreRepository, BookInStoreRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 
-#region repository
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IBookInStoreService, BookInStoreService>();
 builder.Services.AddScoped<IBookService, BookService>();
@@ -20,7 +25,6 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
-#endregion
 
 var app = builder.Build();
 

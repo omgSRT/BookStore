@@ -4,9 +4,6 @@
 
 @{
     ViewData["Title"] = "Create";
-    IAccountService accountService = new AccountService();
-    var id = HttpContext.Session.GetInt32("accountId");
-    var account = id != null ? accountService.GetById((int)id) : null;
 }
 
 <h1>Import Book</h1>
@@ -22,7 +19,7 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="BookInStore.StoreId" type="hidden" value="@account.StoreId" />
+            <input asp-for="BookInStore.StoreId" type="hidden" value="StoreId" />
             <div class="form-group">
                 <label asp-for="BookInStore.BookId" class="control-label"></label>
                 <select asp-for="BookInStore.BookId" class ="form-control" asp-items="ViewBag.BookId">

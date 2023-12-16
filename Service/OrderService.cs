@@ -12,7 +12,7 @@ namespace Service
     {
         private IOrderRepository _repository;
 
-        public OrderService(OrderRepository repository)
+        public OrderService(IOrderRepository repository)
         {
             _repository = repository;
         }

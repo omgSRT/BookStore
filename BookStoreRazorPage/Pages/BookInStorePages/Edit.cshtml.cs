@@ -15,17 +15,21 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
     {
         private readonly IBookInStoreService _bookInStoreService;
         private readonly IBookService _bookService;
+        private readonly IAccountService _accountService;
 
-        public EditModel(IBookInStoreService bookInStoreService, IBookService bookService)
+        public EditModel(IBookInStoreService bookInStoreService, IBookService bookService, IAccountService accountService)
         {
             _bookInStoreService = bookInStoreService;
             _bookService = bookService;
+            _accountService = accountService;
         }
 
         [BindProperty]
         public BookInStore BookInStore { get; set; } = default!;
+        [BindProperty]
+        public int StoreId { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             try
             {
@@ -50,7 +54,11 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                 {
                     return NotFound();
                 }
+                var accid = HttpContext.Session.GetInt32("accountId");
+                var account = _accountService.GetById((int)accid);
+
                 BookInStore = bookinstore;
+                StoreId = (int)account.StoreId;
                 ViewData["BookId"] = new SelectList(_bookService.GetAll(), "Id", "Name");
                 return Page();
             }

@@ -17,7 +17,7 @@ namespace BookStoreRazorPage.Pages.OrderDetails
         private readonly IOrderService _orderService;
         private readonly IBookInStoreService _bookInStoreService;
 
-        public EditModel(BookInStoreService bookInStoreService, OrderService orderService)
+        public EditModel(IOrderService orderService, IBookInStoreService bookInStoreService)
         {
             _orderService = orderService;
             _bookInStoreService= bookInStoreService;
