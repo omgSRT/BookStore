@@ -16,9 +16,9 @@ namespace BookStoreRazorPage.Pages.Orders
     {
         private readonly IOrderService _service;
 
-        public EditModel()
+        public EditModel(OrderService orderService)
         {
-            _service = new OrderService();
+            _service = orderService;
         }
 
         [BindProperty]
