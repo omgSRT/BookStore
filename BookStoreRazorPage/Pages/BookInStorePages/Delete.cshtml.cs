@@ -91,6 +91,7 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                         }
                     }
 
+
                     _bookInStoreService.Delete(bookinstore);
 
                     TempData["ResultSuccess"] = "Delete Successfully";
