@@ -14,7 +14,7 @@ namespace BookStoreRazorPage.Pages.Orders
     {
         private readonly IOrderService _service;
 
-        public IndexSellerModel(OrderService orderService)
+        public IndexSellerModel(IOrderService orderService)
         {
             _service = orderService;
         }
