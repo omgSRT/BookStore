@@ -15,9 +15,9 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
     {
         private readonly IBookInStoreService _bookInStoreService;
 
-        public DetailsModel()
+        public DetailsModel(IBookInStoreService bookInStoreService)
         {
-            _bookInStoreService = new BookInStoreService();
+            _bookInStoreService = bookInStoreService;
         }
 
       public BookInStore BookInStore { get; set; } = default!; 

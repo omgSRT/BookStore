@@ -15,10 +15,10 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
         private readonly IBookInStoreService _bookInStoreService;
         private readonly IOrderService _orderService;
 
-        public DeleteModel()
+        public DeleteModel(IBookInStoreService bookInStoreService, IOrderService orderService)
         {
-            _bookInStoreService = new BookInStoreService();
-            _orderService = new OrderService();
+            _bookInStoreService = bookInStoreService;
+            _orderService = orderService;
         }
 
         [BindProperty]

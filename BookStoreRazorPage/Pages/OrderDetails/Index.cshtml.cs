@@ -14,9 +14,9 @@ namespace BookStoreRazorPage.Pages.OrderDetails
     {
         private readonly IOrderService _service;
 
-        public IndexModel()
+        public IndexModel(IOrderService orderService)
         {
-            _service = new OrderService();
+            _service = orderService;
         }
 
         public IList<OrderDetail> OrderDetail { get; set; } = default!;

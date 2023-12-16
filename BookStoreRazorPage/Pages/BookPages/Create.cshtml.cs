@@ -16,11 +16,11 @@ namespace BookStoreRazorPage.Pages.BookPages
         private readonly ICategoryService _categoryService;
         private readonly IPublisherService _publisherService;
 
-        public CreateModel()
+        public CreateModel(IBookService bookService, ICategoryService categoryService, IPublisherService publisherService)
         {
-            _bookService = new BookService();
-            _categoryService = new CategoryService();
-            _publisherService = new PublisherService();
+            _bookService = bookService;
+            _categoryService = categoryService;
+            _publisherService = publisherService;
         }
 
         public IActionResult OnGet()

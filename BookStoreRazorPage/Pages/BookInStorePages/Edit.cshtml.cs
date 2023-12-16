@@ -16,10 +16,10 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
         private readonly IBookInStoreService _bookInStoreService;
         private readonly IBookService _bookService;
 
-        public EditModel()
+        public EditModel(IBookInStoreService bookInStoreService, IBookService bookService)
         {
-            _bookInStoreService = new BookInStoreService();
-            _bookService = new BookService();
+            _bookInStoreService = bookInStoreService;
+            _bookService = bookService;
         }
 
         [BindProperty]

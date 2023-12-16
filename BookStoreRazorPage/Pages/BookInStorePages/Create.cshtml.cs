@@ -19,11 +19,11 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
         private readonly IBookService _bookService;
         private readonly IAccountService _accountService;
 
-        public CreateModel()
+        public CreateModel(IBookInStoreService bookInStoreService, IBookService bookService, IAccountService accountService)
         {
-            _bookInStoreService = new BookInStoreService();
-            _bookService = new BookService();
-            _accountService = new AccountService();
+            _bookInStoreService = bookInStoreService;
+            _bookService = bookService;
+            _accountService = accountService;
         }
 
         [BindProperty]

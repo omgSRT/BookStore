@@ -15,10 +15,10 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
         private readonly IBookInStoreService _bookInStoreService;
         private readonly IAccountService _accountService;
 
-        public IndexModel()
+        public IndexModel(IBookInStoreService bookInStoreService, IAccountService accountService)
         {
-            _bookInStoreService = new BookInStoreService();
-            _accountService = new AccountService();
+            _bookInStoreService = bookInStoreService;
+            _accountService = accountService;
         }
 
         public IList<BookInStore> BookInStore { get;set; } = default!;

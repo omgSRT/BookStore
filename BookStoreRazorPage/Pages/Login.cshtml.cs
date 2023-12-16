@@ -16,11 +16,11 @@ namespace BookStoreRazorPage.Pages
         private readonly IRoleService _roleService;
         private readonly IStoreService _storeService;
 
-        public LoginModel()
+        public LoginModel(IAccountService accountService, IRoleService roleService, IStoreService storeService)
         {
-            _accountService = new AccountService();
-            _roleService = new RoleService();
-            _storeService = new StoreService();
+            _accountService = accountService;
+            _roleService = roleService;
+            _storeService = storeService;
         }
 
         public IActionResult OnGet()

@@ -14,9 +14,9 @@ namespace BookStoreRazorPage.Pages
     {
         private readonly IAccountService _accountService;
 
-        public RegisterModel()
+        public RegisterModel(IAccountService accountService)
         {
-            _accountService = new AccountService();
+            _accountService = accountService;
         }
 
         public IActionResult OnGet()
