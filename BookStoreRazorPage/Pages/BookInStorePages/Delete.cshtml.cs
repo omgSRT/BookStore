@@ -14,11 +14,13 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
     {
         private readonly IBookInStoreService _bookInStoreService;
         private readonly IOrderService _orderService;
+        private readonly IBookService _bookService;
 
-        public DeleteModel(IBookInStoreService bookInStoreService, IOrderService orderService)
+        public DeleteModel(IBookInStoreService bookInStoreService, IOrderService orderService, IBookService bookService)
         {
             _bookInStoreService = bookInStoreService;
             _orderService = orderService;
+            _bookService = bookService;
         }
 
         [BindProperty]
@@ -89,6 +91,12 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
                             TempData["ResultFailed"] = "There's processing order with this book. Cannot Delete";
                             return RedirectToPage("./Index");
                         }
+                    }
+                    if(bookinstore.Amount > 0)
+                    {
+                        var book = _bookService.GetById((int)bookinstore.BookId);
+                        book.Amount += bookinstore.Amount;
+                        _bookService.Update(book);
                     }
 
 
