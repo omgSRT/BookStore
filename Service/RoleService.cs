@@ -11,9 +11,9 @@ namespace Service
     public class RoleService : IRoleService
     {
         private IRoleRepository _repository;
-        public RoleService()
+        public RoleService(IRoleRepository repository)
         {
-            _repository = new RoleRepository();
+            _repository = repository;
         }
 
         public void Add(Role role)

@@ -11,9 +11,9 @@ namespace Service
     public class PublisherService : IPublisherService
     {
         private IPublisherRepository _repository;
-        public PublisherService()
+        public PublisherService(IPublisherRepository repository)
         {
-            _repository = new PublisherRepository();
+            _repository = repository;
         }
 
         public void Add(Publisher publisher)

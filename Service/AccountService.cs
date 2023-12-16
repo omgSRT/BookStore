@@ -11,9 +11,9 @@ namespace Service
     public class AccountService : IAccountService
     {
         private IAccountRepository _repository;
-        public AccountService()
+        public AccountService(IAccountRepository repository)
         {
-            _repository = new AccountRepository();
+            _repository = repository;
         }
 
         public void Add(Account account)

@@ -12,14 +12,14 @@ builder.Services.AddSession();
 builder.Services.AddDbContext<BookStoreDBContext>();
 
 #region repository
-builder.Services.AddSingleton<IAccountService, AccountService>();
-builder.Services.AddSingleton<IBookInStoreService, BookInStoreService>();
-builder.Services.AddSingleton<IBookService, BookService>();
-builder.Services.AddSingleton<ICategoryService, CategoryService>();
-builder.Services.AddSingleton<IOrderService, OrderService>();
-builder.Services.AddSingleton<IPublisherService, PublisherService>();
-builder.Services.AddSingleton<IRoleService, RoleService>();
-builder.Services.AddSingleton<IStoreService, StoreService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IBookInStoreService, BookInStoreService>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPublisherService, PublisherService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
 #endregion
 
 var app = builder.Build();

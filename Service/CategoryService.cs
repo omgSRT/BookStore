@@ -11,9 +11,10 @@ namespace Service
     public class CategoryService : ICategoryService
     {
         private ICategoryRepository _repository;
-        public CategoryService()
+
+        public CategoryService(ICategoryRepository repository)
         {
-            _repository = new CategoryRepository();
+            _repository = repository;
         }
 
         public void Add(Category category)
