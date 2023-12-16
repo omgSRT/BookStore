@@ -54,8 +54,8 @@ namespace BookStoreRazorPage.Pages.BookPages
                     return RedirectToPage("../Error");
                 }
 
-                count = _bookService.GetAll().Count();
-                Book = _bookService.GetAll()
+                count = _bookService.GetAllWithIncludeCategoryAndPublisher().Count();
+                Book = _bookService.GetAllWithIncludeCategoryAndPublisher()
                     .Skip((curentPage - 1) * pageSize).Take(pageSize)
                     .ToList();
                 return Page();
@@ -72,34 +72,34 @@ namespace BookStoreRazorPage.Pages.BookPages
         {
             if (SearchValue is null)
             {
-                count = _bookService.GetAll().Count();
-                Book = _bookService.GetAll()
+                count = _bookService.GetAllWithIncludeCategoryAndPublisher().Count();
+                Book = _bookService.GetAllWithIncludeCategoryAndPublisher()
                     .Skip((curentPage - 1) * pageSize).Take(pageSize)
                     .ToList();
                 return Page();
             }
             else if (SearchValue.Trim().Length == 0)
             {
-                count = _bookService.GetAll().Count();
-                Book = _bookService.GetAll()
+                count = _bookService.GetAllWithIncludeCategoryAndPublisher().Count();
+                Book = _bookService.GetAllWithIncludeCategoryAndPublisher()
                     .Skip((curentPage - 1) * pageSize).Take(pageSize)
                     .ToList();
                 return Page();
             }
             else
             {
-                count = _bookService.GetAll()
+                count = _bookService.GetAllWithIncludeCategoryAndPublisher()
                     .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
                     .Count();
-                Book = _bookService.GetAll()
+                Book = _bookService.GetAllWithIncludeCategoryAndPublisher()
                     .Where(x => x.Name.Contains(SearchValue, StringComparison.OrdinalIgnoreCase))
                     .Skip((curentPage - 1) * pageSize).Take(pageSize)
                     .ToList();
                 if (Book.Count == 0)
                 {
                     TempData["ResultFailed"] = "There's no result matched " + SearchValue;
-                    count = _bookService.GetAll().Count();
-                    Book = _bookService.GetAll()
+                    count = _bookService.GetAllWithIncludeCategoryAndPublisher().Count();
+                    Book = _bookService.GetAllWithIncludeCategoryAndPublisher()
                         .Skip((curentPage - 1) * pageSize).Take(pageSize)
                         .ToList();
                 }

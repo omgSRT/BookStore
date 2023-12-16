@@ -47,7 +47,7 @@ namespace BookStoreRazorPage.Pages.BookPages
                     return NotFound();
                 }
 
-                var book = _bookService.GetById((int)id);
+                var book = _bookService.GetAllWithIncludeCategoryAndPublisher().Where(x => x.Id == (int)id).FirstOrDefault();
                 if (book == null)
                 {
                     return NotFound();

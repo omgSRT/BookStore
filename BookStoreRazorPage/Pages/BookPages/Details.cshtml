@@ -52,7 +52,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Book.Amount)
-        </dd>>
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Book.Price)
         </dt>
@@ -60,16 +60,16 @@
             @Html.DisplayFor(model => model.Book.Price)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.CategoryId)
+            @Html.DisplayNameFor(model => model.Book.Category)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.CategoryId)
+            @Html.DisplayFor(model => model.Book.Category.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.PublisherId)
+            @Html.DisplayNameFor(model => model.Book.Publisher)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.PublisherId)
+            @Html.DisplayFor(model => model.Book.Publisher.Name)
         </dd>
     </dl>
 </div>
