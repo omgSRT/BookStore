@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject;
-using Repository;
 using Service;
 
 namespace BookStoreRazorPage.Pages.BookInStorePages

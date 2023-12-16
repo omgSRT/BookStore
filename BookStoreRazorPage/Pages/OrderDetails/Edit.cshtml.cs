@@ -17,10 +17,10 @@ namespace BookStoreRazorPage.Pages.OrderDetails
         private readonly IOrderService _orderService;
         private readonly IBookInStoreService _bookInStoreService;
 
-        public EditModel()
+        public EditModel(IOrderService orderService, IBookInStoreService bookInStoreService)
         {
-            _orderService = new OrderService();
-            _bookInStoreService= new BookInStoreService();
+            _orderService = orderService;
+            _bookInStoreService= bookInStoreService;
         }
 
         [BindProperty]
