@@ -29,15 +29,15 @@
 
 @if (TempData["ErrorAuthorize"] != null)
 {
-    <div class="text-center text-danger">
-        <h1>@TempData["ErrorAuthorize"]</h1>
+    <div class="d-flex align-items-center justify-content-between">
+        <h1 class="text-danger">@TempData["ErrorAuthorize"]</h1>
     </div>
     TempData.Clear();
 }
 @if (TempData["Error"] != null)
 {
-    <div class="text-center text-danger">
-        <h1>@TempData["Error"]</h1>
+    <div class="d-flex align-items-center justify-content-between">
+        <h1 class="text-danger">@TempData["Error"]</h1>
     </div>
     TempData.Clear();
 }

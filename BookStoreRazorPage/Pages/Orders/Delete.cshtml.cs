@@ -15,7 +15,7 @@ namespace BookStoreRazorPage.Pages.Orders
     {
         private readonly IOrderService _service;
 
-        public DeleteModel(OrderService orderService)
+        public DeleteModel(IOrderService orderService)
         {
             _service = orderService;
         }

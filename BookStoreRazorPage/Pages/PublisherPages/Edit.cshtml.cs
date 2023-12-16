@@ -17,7 +17,7 @@ namespace BookStoreRazorPage.Pages.PublisherPages
         private readonly IPublisherService _publisherService;
         private readonly IBookService _bookService;
 
-        public EditModel(PublisherService publisherService, BookService bookService)
+        public EditModel(IPublisherService publisherService, IBookService bookService)
         {
             _publisherService = publisherService;
             _bookService = bookService;

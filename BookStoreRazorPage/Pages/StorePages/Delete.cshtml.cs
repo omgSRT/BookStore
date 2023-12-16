@@ -14,7 +14,7 @@ namespace BookStoreRazorPage.Pages.StorePages
     {
         private readonly IStoreService _storeService;
 
-        public DeleteModel(StoreService storeService)
+        public DeleteModel(IStoreService storeService)
         {
             _storeService = storeService;
         }

@@ -22,6 +22,11 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
         }
 
         public IList<BookInStore> BookInStore { get;set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public int curentPage { get; set; } = 1;
+        public int pageSize { get; set; } = 5;
+        public int count { get; set; }
+        public int totalPages => (int)Math.Ceiling(Decimal.Divide(count, pageSize));
 
         public IActionResult OnGet()
         {
@@ -37,7 +42,11 @@ namespace BookStoreRazorPage.Pages.BookInStorePages
 
                 var account = _accountService.GetById((int)id);
 
-                var list = _bookInStoreService.GetAllWithIncludeBookAndStore().Where(x => x.StoreId == account.StoreId).ToList();
+                count = _bookInStoreService.GetAllWithIncludeBookAndStore().Where(x => x.StoreId == account.StoreId).Count();
+                var list = _bookInStoreService.GetAllWithIncludeBookAndStore()
+                    .Skip((curentPage - 1) * pageSize).Take(pageSize)
+                    .Where(x => x.StoreId == account.StoreId)
+                    .ToList();
                 if (list != null)
                 {
                     BookInStore = list;

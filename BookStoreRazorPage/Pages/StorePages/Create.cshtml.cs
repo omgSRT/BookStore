@@ -14,7 +14,7 @@ namespace BookStoreRazorPage.Pages.StorePages
     {
         private readonly IStoreService _storeService;
 
-        public CreateModel(StoreService storeService)
+        public CreateModel(IStoreService storeService)
         {
             _storeService = storeService;
         }
