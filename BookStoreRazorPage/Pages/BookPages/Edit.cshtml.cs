@@ -35,23 +35,23 @@ namespace BookStoreRazorPage.Pages.BookPages
                 TempData["ErrorLogin"] = "You need to login to access this page";
                 return RedirectToPage("../Login");
             }
-            else if (!loginSession.Equals("admin")|| !loginSession.Equals("seller"))
+            else if (loginSession.Equals("admin") || loginSession.Equals("seller"))
             {
-                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
-                return RedirectToPage("../Error");
+                var book = _bookService.GetById((int)id);
+
+                if (book == null)
+                {
+                    return NotFound();
+                }
+
+                Book = book;
+                ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
+                ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name");
+                return Page();
             }
+            TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+            return RedirectToPage("../Error");
 
-            var book = _bookService.GetById((int)id);
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            Book = book;
-            ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
-            ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name");
-            return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.

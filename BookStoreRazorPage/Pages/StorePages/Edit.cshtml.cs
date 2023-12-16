@@ -31,31 +31,31 @@ namespace BookStoreRazorPage.Pages.StorePages
                 TempData["ErrorLogin"] = "You need to login to access this page";
                 return RedirectToPage("../Login");
             }
-            else if (!loginSession.Equals("admin"))
+            else if (loginSession.Equals("admin") || loginSession.Equals("seller"))
             {
-                TempData["ErrorAuthorize"] = "You don't have permission to access this page";
-                return RedirectToPage("../Error");
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["IsActive"] = new SelectList(new[]
-                    {
+                ViewData["IsActive"] = new SelectList(new[]
+                        {
                     new { Value = true, Text = "Active" },
                     new { Value = false, Text = "Inactive" }
                 }, "Value", "Text");
 
-            var store = _storeService.GetById((int)id);
-            if (store == null)
-            {
-                return NotFound();
-            }
-            Store = store;
+                var store = _storeService.GetById((int)id);
+                if (store == null)
+                {
+                    return NotFound();
+                }
+                Store = store;
 
-            return Page();
+                return Page();
+            }
+
+            TempData["ErrorAuthorize"] = "You don't have permission to access this page";
+            return RedirectToPage("../Error");
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
