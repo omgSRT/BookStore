@@ -63,8 +63,17 @@ namespace BookStoreRazorPage.Pages.BookPages
                 if (ModelState.IsValid)
                 {
                     var updateBook = _bookService.GetById(Book.Id);
-                    updateBook!.Amount = Book.Amount;
-                    _bookService.Update(updateBook!);
+                    var priceBook = Book.Price;
+                    if(priceBook == null) {
+                        TempData["ResultFailed"] = "Please input price";
+                        return RedirectToPage("./Index");
+                    }
+                    if(priceBook <= 0)
+                    {
+                        TempData["ResultFailed"] = "Price must be more than 0";
+                        return RedirectToPage("./Index");
+                    }
+                    _bookService.Update(Book);
                     ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
                     ViewData["PublisherId"] = new SelectList(_publisherService.GetAll(), "Id", "Name");
 
